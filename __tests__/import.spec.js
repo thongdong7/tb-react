@@ -1,4 +1,6 @@
-test('adds 1 + 2 to equal 3', () => {
-  const sum = require('../sum');
-  expect(sum(1, 2)).toBe(3);
+test('Could import', () => {
+  const {map, get, form} = require('../lib');
+  expect(map).toBeDefined()
+  expect(form).toBeDefined()
+  expect(map).toBeDefined()
 });
