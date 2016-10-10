@@ -9,6 +9,9 @@ import {selectProps} from './props'
 import {get, post, form} from './mapUtils'
 import toastr from 'toastr'
 
+/**
+ * Notify
+ */
 export function notify(ok, message) {
   const method = ok ? toastr.success : toastr.error
   method(message)

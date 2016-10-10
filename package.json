@@ -4,8 +4,8 @@
   "description": "React toolbox support load data from API and render into components",
   "main": "lib/index.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/babel -d lib src/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "NODE_ENV=development ./node_modules/.bin/babel -d lib src/",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -13,12 +13,8 @@
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
-    "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-es2016": "^6.16.0",
-    "babel-preset-es2017": "^6.16.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
+    "babel-preset-react-app": "^0.2.1",
+    "jest": "^16.0.1",
     "webpack": "^1.13.2"
   },
   "dependencies": {
