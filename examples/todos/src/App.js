@@ -66,7 +66,9 @@ const actions = {
 let store = new Store()
 import invariant from 'invariant'
 
-function connect(Comp) {
+const emptyProps = (state) => ({})
+
+const connect = (stateToProps=emptyProps) => (Comp) => {
   class Connect extends Component {
     constructor(props, context) {
       super(props, context)
@@ -81,6 +83,7 @@ function connect(Comp) {
 
       const storeState = this.store.getState()
       this.state = { storeState }
+      console.log('store state', this.state);
   //    this.clearCache()
     }
 
@@ -98,10 +101,13 @@ function connect(Comp) {
 
     storeStateChanged = () => {
       console.log('store changed', this.store.getState());
+      const storeState = stateToProps(this.store.getState())
+      console.log('props', storeState, typeof storeState);
+      this.setState({storeState})
     }
 
     render() {
-      console.log('connect props', this.props, Comp);
+      console.log('connect props', this.props);
       return (
         <Comp />
       )
@@ -127,7 +133,7 @@ class _App extends Component {
   }
 }
 
-const App = connect(_App)
+const App = connect(state => state)(_App)
 
 class MyApp extends Component {
   render() {
