@@ -5,6 +5,7 @@ import {RemoteButton} from './formData'
 import {Link, NavLink, NavBar} from './link'
 import {Button, LinkButton, ModalButton} from './button'
 import {selectProps} from './props'
+import {store} from './store'
 
 import {get, post, form} from './mapUtils'
 import toastr from 'toastr'
@@ -36,4 +37,5 @@ export {
   success,
   Link, NavLink, NavBar,
   Button, LinkButton, ModalButton,
+  store
 }
