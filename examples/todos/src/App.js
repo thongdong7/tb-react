@@ -1,50 +1,13 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 
 //styles
-import './App.less';
-import './App.scss';
-import './App.styl';
-import styles from './Modules.css';
+//import './App.less';
+//import './App.scss';
+//import './App.styl';
+//import styles from './Modules.css';
 
-class Store {
-  constructor() {
-    this.state = undefined
-    this.subscribers = []
-  }
-
-  subscribe = (callback) => {
-    if (this.subscribers.indexOf(callback) >= 0) {
-      console.error('subscribe too much times.');
-    } else {
-      this.subscribers.push(callback)
-
-      return () => {
-        let index = this.subscribers.indexOf(callback);
-        if (index > -1) {
-          this.subscribers.splice(index, 1)
-        }
-      }
-    }
-  }
-
-  getState() {
-    return this.state
-  }
-
-  dispatch = (reducers) => {
-    let state = this.state
-    for (let reducer of reducers) {
-      state = reducer(state)
-    }
-
-//    console.log(state)
-    this.state = state
-    for (const callback of this.subscribers) {
-      callback(this.state)
-    }
-  }
-}
+import Store from '../../../lib/store'
 
 let nextTodoId = 0
 const actions = {

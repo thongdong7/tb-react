@@ -1,7 +1,7 @@
-import Store from '../lib/store'
+import Store from '../src/store'
 
 let nextTodoId = 0
-const actions = {
+const todoActions = {
   addTodo: (text) => ([
     // reducers for completeTodo
     (state=[]) => ([...state, {id: nextTodoId++, text, completed: false}])
@@ -24,16 +24,16 @@ test('Should run reducers', () => {
 //    console.log('state', state);
   })
 
-  store.dispatch(actions.addTodo("Hello"))
-  store.dispatch(actions.addTodo("World"))
-  store.dispatch(actions.toggleTodo(1))
+  store.dispatch(todoActions.addTodo("Hello"))
+  store.dispatch(todoActions.addTodo("World"))
+  store.dispatch(todoActions.toggleTodo(1))
 
   const state = store.getState()
   expect(state.length).toBe(2)
   expect(state[0].completed).toBe(false)
   expect(state[1].completed).toBe(true)
 
-  store.dispatch(actions.toggleTodo(1))
+  store.dispatch(todoActions.toggleTodo(1))
   expect(store.getState()[0].completed).toBe(false)
   expect(store.getState()[1].completed).toBe(false)
 
