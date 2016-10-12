@@ -7,8 +7,10 @@ import React, {Component} from 'react';
 //import './App.styl';
 //import styles from './Modules.css';
 
-import connect from '../../../lib/components/connect'
+import {connect} from '../../../lib/simple-react-redux'
 import {todoActions, visibilityFilterActions} from './actions'
+
+console.log('connect', connect);
 
 class _App extends Component {
   addTodo = () => {

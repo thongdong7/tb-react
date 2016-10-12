@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Provider from '../../../lib/components/Provider'
-import Store from '../../../lib/store'
+import {Provider} from '../../../lib/simple-react-redux'
+import Store from '../../../lib/simple-redux'
 
 import App from './App';
 import './index.css';
