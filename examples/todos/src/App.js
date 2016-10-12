@@ -67,7 +67,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
     storeStateChanged = () => {
       console.log('store changed', this.store.getState());
       const storeState = stateToProps(this.store.getState())
-      console.log('props', storeState, typeof storeState);
+//      console.log('props', storeState, typeof storeState);
       this.setState({storeState})
     }
 
@@ -90,7 +90,7 @@ class _App extends Component {
 
   render() {
     const {todos=[]} = this.props
-    console.log('todos', todos);
+    console.log('todos', this.props);
     return (
       <div className="App">
         app
