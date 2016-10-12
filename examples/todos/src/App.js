@@ -53,16 +53,9 @@ const mapStateToProps = ({todos, visibilityFilter}) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addTodo: () => {
-//      console.log('add todo');
-      dispatch(todoActions.addTodo, "Hello")
-    },
-    toggleTodo: (id) => {
-      dispatch(todoActions.toggleTodo, id)
-    },
-    changeVisibility: (filter) => {
-      dispatch(visibilityFilterActions.setVisibilityFilter, filter)
-    }
+    addTodo: () => dispatch(todoActions.addTodo, "Hello"),
+    toggleTodo: (id) => dispatch(todoActions.toggleTodo, id),
+    changeVisibility: (filter) => dispatch(visibilityFilterActions.setVisibilityFilter, filter),
   }
 }
 
