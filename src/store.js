@@ -26,8 +26,7 @@ function buildFnMap(actions) {
 export default class Store {
   constructor(actions) {
     this.actions = actions
-//    this.state = undefined
-    this.state = {}
+    this.state = undefined
     this.subscribers = []
 
     this.fnMap = buildFnMap(actions)
@@ -52,18 +51,12 @@ export default class Store {
     return this.state
   }
 
-//  dispatch1 = (action, ...args) => {
-//    const reducers = this.actions[action.name](...args)
-//    this.state = executeReducersArray(reducers, this.state)
-//    for (const callback of this.subscribers) {
-//      callback(this.state)
-//    }
-//  }
-
   findChildState = (state, fn) => {
     const paths = this.fnMap[fn]
     for (const field of paths) {
-      state = state[field]
+      if (state) {
+        state = state[field]
+      }
     }
     return state
   }
@@ -78,9 +71,11 @@ export default class Store {
     const tail = paths.slice(1)
   //  console.log('tail', tail);
 
+    const headState = state ? state[head] : undefined
+
     return {
       ...state,
-      [head]: this.updateChildState(state[head], tail, newChildState)
+      [head]: this.updateChildState(headState, tail, newChildState)
     }
   }
 
