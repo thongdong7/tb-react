@@ -46,9 +46,9 @@ export default function createStore(actions) {
       subscribers.push(callback)
 
       return () => {
-        let index = this.subscribers.indexOf(callback);
+        let index = subscribers.indexOf(callback);
         if (index > -1) {
-          this.subscribers.splice(index, 1)
+          subscribers.splice(index, 1)
         }
       }
     }
