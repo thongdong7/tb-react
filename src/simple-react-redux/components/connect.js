@@ -30,7 +30,7 @@ const connect = (stateToProps=emptyProps, mapDispatchToProps) => (Comp) => {
     }
 
     componentWillMount() {
-//      console.log('subscribe');
+//      console.log('subscribe', this.store);
       this.unsubscribe = this.store.subscribe(this.storeStateChanged)
     }
 

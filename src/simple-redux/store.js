@@ -34,20 +34,16 @@ function buildFnMap(actions) {
   return ret
 }
 
-export default class Store {
-  constructor(actions) {
-    this.actions = actions
-    this.state = undefined
-    this.subscribers = []
+export default function createStore(actions) {
+  const fnMap = buildFnMap(actions)
+  let subscribers = []
+  let state = undefined
 
-    this.fnMap = buildFnMap(actions)
-  }
-
-  subscribe = (callback) => {
-    if (this.subscribers.indexOf(callback) >= 0) {
+  function subscribe(callback) {
+    if (subscribers.indexOf(callback) >= 0) {
       console.error('subscribe too much times.');
     } else {
-      this.subscribers.push(callback)
+      subscribers.push(callback)
 
       return () => {
         let index = this.subscribers.indexOf(callback);
@@ -58,12 +54,12 @@ export default class Store {
     }
   }
 
-  getState() {
-    return this.state
+  function getState() {
+    return state
   }
 
-  findChildState = (state, fn) => {
-    const paths = this.fnMap[fn]
+  function findChildState(state, fn) {
+    const paths = fnMap[fn]
     for (const field of paths) {
       if (state) {
         state = state[field]
@@ -73,7 +69,7 @@ export default class Store {
   }
 
 
-  updateChildState = (state, paths, newChildState) => {
+  function updateChildState(state, paths, newChildState) {
     if (paths.length == 0) {
       return newChildState
     }
@@ -86,18 +82,18 @@ export default class Store {
 
     return {
       ...state,
-      [head]: this.updateChildState(headState, tail, newChildState)
+      [head]: updateChildState(headState, tail, newChildState)
     }
   }
 
-  dispatch = (fn, ...args) => {
+  function dispatch(fn, ...args) {
     invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
 
     // Get reducers
     const reducers = fn(...args)
 
     // Find `state child` by fn
-    let childState = this.findChildState(this.state, fn)
+    let childState = findChildState(state, fn)
 //    console.log('child state', childState);
 
     // Reduce `state child`
@@ -105,13 +101,17 @@ export default class Store {
 //    console.log('new child state', childState);
 
     // Update `state child`
-    this.state = this.updateChildState(this.state, this.fnMap[fn], childState)
+    state = updateChildState(state, fnMap[fn], childState)
 //    console.log('new state', this.state, this.fnMap[fn]);
 
-    for (const callback of this.subscribers) {
-      callback(this.state)
+    for (const callback of subscribers) {
+      callback(state)
     }
+  }
 
-    return this.state
+  return {
+    getState,
+    dispatch,
+    subscribe
   }
 }
