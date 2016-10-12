@@ -1,3 +1,5 @@
+import invariant from 'invariant'
+
 export function executeReducersArray(reducers, state) {
   for (let reducer of reducers) {
     state = reducer(state)
@@ -80,27 +82,22 @@ export default class Store {
   }
 
   dispatch = (fn, ...args) => {
-    const fnName = fn.name
-    console.log('name', fnName);
+    invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
 
-    // Find reducers
-  //  console.log('fn', fn);
+    // Get reducers
     const reducers = fn(...args)
-  //  console.log('reducers', reducers);
 
-    // Find path
-
-    // Find `state child` by fn name
+    // Find `state child` by fn
     let childState = this.findChildState(this.state, fn)
-    console.log('child state', childState);
+//    console.log('child state', childState);
 
     // Reduce `state child`
     childState = executeReducersArray(reducers, childState)
-    console.log('new child state', childState);
+//    console.log('new child state', childState);
 
     // Update `state child`
     this.state = this.updateChildState(this.state, this.fnMap[fn], childState)
-    console.log('new state', this.state);
+//    console.log('new state', this.state);
 
     return this.state
   }
