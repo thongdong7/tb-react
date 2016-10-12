@@ -72,7 +72,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
     }
 
     render() {
-      console.log('connect props', this.props);
+//      console.log('connect props', this.props);
       return (
         <Comp {...this.state.storeState} />
       )
