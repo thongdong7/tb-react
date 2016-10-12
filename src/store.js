@@ -108,6 +108,10 @@ export default class Store {
     this.state = this.updateChildState(this.state, this.fnMap[fn], childState)
 //    console.log('new state', this.state, this.fnMap[fn]);
 
+    for (const callback of this.subscribers) {
+      callback(this.state)
+    }
+
     return this.state
   }
 }

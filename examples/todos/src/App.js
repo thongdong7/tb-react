@@ -11,22 +11,24 @@ import Store from '../../../lib/store'
 
 let nextTodoId = 0
 const actions = {
-  addTodo: (text) => ([
-    // reducers for completeTodo
-    (state=[]) => ([...state, {id: nextTodoId++, text, completed: false}])
-  ]),
-  toggleTodo: (id) => ([
-    (state=[]) => state.map(t => {
-        if (t.id !== id) {
-          return t
-        } else {
-          return {...t, completed: !t.completed}
-        }
-      })
-  ])
+  todos: {
+    addTodo: (text) => ([
+      // reducers for completeTodo
+      (state=[]) => ([...state, {id: nextTodoId++, text, completed: false}])
+    ]),
+    toggleTodo: (id) => ([
+      (state=[]) => state.map(t => {
+          if (t.id !== id) {
+            return t
+          } else {
+            return {...t, completed: !t.completed}
+          }
+        })
+    ])
+  }
 }
 
-let store = new Store()
+let store = new Store(actions)
 import invariant from 'invariant'
 
 const emptyProps = (state) => ({})
@@ -72,7 +74,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
     render() {
       console.log('connect props', this.props);
       return (
-        <Comp />
+        <Comp {...this.state.storeState} />
       )
     }
   }
@@ -83,14 +85,23 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
 class _App extends Component {
   addTodo = () => {
     console.log('add todo');
-    store.dispatch(actions.addTodo("Hello"))
+    store.dispatch(actions.todos.addTodo, "Hello")
   }
 
   render() {
+    const {todos=[]} = this.props
+    console.log('todos', todos);
     return (
       <div className="App">
         app
         <button onClick={this.addTodo}>Add</button>
+        <ul>
+          {todos.map((t, idx) => {
+            return (
+              <li key={idx}>{t.id} {t.text}</li>
+            )
+          })}
+        </ul>
       </div>
     )
   }
@@ -102,7 +113,7 @@ class MyApp extends Component {
   render() {
     return (
       <div>
-        My App
+        My App1
         <App />
       </div>
     )
