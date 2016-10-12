@@ -25,6 +25,9 @@ const actions = {
           }
         })
     ])
+  },
+  visibilityFilter: {
+    setVisibilityFilter: (filter) => state => filter
   }
 }
 
@@ -48,7 +51,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
 
       const storeState = this.store.getState()
       this.state = { storeState }
-      console.log('store state', this.state);
+//      console.log('store state', this.state);
   //    this.clearCache()
     }
 
@@ -88,6 +91,14 @@ class _App extends Component {
     store.dispatch(actions.todos.addTodo, "Hello")
   }
 
+  changeVisibility(filter) {
+    store.dispatch(actions.visibilityFilter.setVisibilityFilter, filter)
+  }
+
+  toggleTodo(id) {
+    store.dispatch(actions.todos.toggleTodo, id)
+  }
+
   render() {
     const {todos=[]} = this.props
     console.log('todos', this.props);
@@ -95,10 +106,19 @@ class _App extends Component {
       <div className="App">
         app
         <button onClick={this.addTodo}>Add</button>
+        <button onClick={() => this.changeVisibility('SHOW_ALL')}>Show All</button>
+        <button onClick={() => this.changeVisibility('SHOW_ACTIVE')}>Active</button>
+        <button onClick={() => this.changeVisibility('SHOW_COMPLETED')}>Completed</button>
         <ul>
           {todos.map((t, idx) => {
             return (
-              <li key={idx}>{t.id} {t.text}</li>
+              <li
+                key={idx}
+                style={{
+                  textDecoration: t.completed ? 'line-through' : 'none'
+                }}
+                onClick={() => this.toggleTodo(t.id)}
+              >{t.id} {t.text}</li>
             )
           })}
         </ul>
@@ -107,7 +127,21 @@ class _App extends Component {
   }
 }
 
-const App = connect(state => state)(_App)
+const App = connect(({todos, visibilityFilter}) => {
+  let retTodos
+  if (visibilityFilter === 'SHOW_COMPLETED') {
+    retTodos = todos.filter(t => t.completed)
+  } else if (visibilityFilter === 'SHOW_ACTIVE') {
+    retTodos = todos.filter(t => !t.completed)
+  } else {
+    retTodos = todos
+  }
+
+  return {
+    todos: retTodos,
+    visibilityFilter
+  }
+})(_App)
 
 class MyApp extends Component {
   render() {
