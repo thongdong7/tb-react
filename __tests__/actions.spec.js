@@ -21,96 +21,96 @@ const actions = {
   todos: todoActions
 }
 
-let state = {
-  todos: [{text: "aaa", completed: false}]
-}
-
-function buildFnMap(actions) {
-  let ret = {}
-  for (const field in actions) {
-    const action = actions[field]
-    if (typeof action === 'function') {
-      ret[action] = []
-    } else {
-      const tmpMap = buildFnMap(action)
-      for (const fn in tmpMap) {
-        ret[fn] = [field, ...tmpMap[fn]]
-      }
-    }
-  }
-
-  return ret
-}
-
-let fnMap2 = buildFnMap(actions)
-//console.log(fnMap2);
-//console.log(fnMap2);
-
-function findChildState(state, fn) {
-  const paths = fnMap2[fn]
-  for (const field of paths) {
-    state = state[field]
-  }
-  return state
-}
-
-
-function updateChildState(state, paths, newChildState) {
-  if (paths.length == 0) {
-    return newChildState
-  }
-
-  const head = paths[0]
-  const tail = paths.slice(1)
-//  console.log('tail', tail);
-
-  return {
-    ...state,
-    [head]: updateChildState(state[head], tail, newChildState)
-  }
-}
-
-
-function doReduce(fn, args) {
-  const fnName = fn.name
-  console.log('name', fnName);
-
-  // Find reducers
-//  console.log('fn', fn);
-  const reducers = fn(...args)
-//  console.log('reducers', reducers);
-
-  // Find path
-
-  // Find `state child` by fn name
-  let childState = findChildState(state, fn)
-  console.log('child state', childState);
-
-  // Reduce `state child`
-  childState = executeReducersArray(reducers, childState)
-  console.log('new child state', childState);
-
-  // Update `state child`
-  state = updateChildState(state, fnMap2[fn], childState)
-  console.log('new state', state);
-
-  return state
-}
+//let state = {
+//  todos: [{text: "aaa", completed: false}]
+//}
+//
+//function buildFnMap(actions) {
+//  let ret = {}
+//  for (const field in actions) {
+//    const action = actions[field]
+//    if (typeof action === 'function') {
+//      ret[action] = []
+//    } else {
+//      const tmpMap = buildFnMap(action)
+//      for (const fn in tmpMap) {
+//        ret[fn] = [field, ...tmpMap[fn]]
+//      }
+//    }
+//  }
+//
+//  return ret
+//}
+//
+//let fnMap2 = buildFnMap(actions)
+////console.log(fnMap2);
+////console.log(fnMap2);
+//
+//function findChildState(state, fn) {
+//  const paths = fnMap2[fn]
+//  for (const field of paths) {
+//    state = state[field]
+//  }
+//  return state
+//}
+//
+//
+//function updateChildState(state, paths, newChildState) {
+//  if (paths.length == 0) {
+//    return newChildState
+//  }
+//
+//  const head = paths[0]
+//  const tail = paths.slice(1)
+////  console.log('tail', tail);
+//
+//  return {
+//    ...state,
+//    [head]: updateChildState(state[head], tail, newChildState)
+//  }
+//}
+//
+//
+//function doReduce(fn, args) {
+//  const fnName = fn.name
+//  console.log('name', fnName);
+//
+//  // Find reducers
+////  console.log('fn', fn);
+//  const reducers = fn(...args)
+////  console.log('reducers', reducers);
+//
+//  // Find path
+//
+//  // Find `state child` by fn name
+//  let childState = findChildState(state, fn)
+//  console.log('child state', childState);
+//
+//  // Reduce `state child`
+//  childState = executeReducersArray(reducers, childState)
+//  console.log('new child state', childState);
+//
+//  // Update `state child`
+//  state = updateChildState(state, fnMap2[fn], childState)
+//  console.log('new state', state);
+//
+//  return state
+//}
 
 
 
 test('Should run reducers', () => {
-  const newState = doReduce(todoActions.addTodo, "Hello")
-  expect(newState.todos.length).toBe(2)
+//  const newState = doReduce(todoActions.addTodo, "Hello")
+//  expect(newState.todos.length).toBe(2)
 
-  let store = new Store(todoActions)
+  let store = new Store(actions)
 
   const unsubscribe = store.subscribe((state) => {
 //    console.log('state', state);
   })
 
-//  store.dispatch(todoActions.addTodo, "Hello")
-//  expect(state.length).toBe(1)
+  store.dispatch(todoActions.addTodo, "Hello")
+  expect(store.getState().todos.length).toBe(1)
 //  store.dispatch(todoActions.addTodo, "World")
 //  store.dispatch(todoActions.toggleTodo(1))
 //
