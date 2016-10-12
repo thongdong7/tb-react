@@ -17,14 +17,6 @@ const todoActions = {
   ])
 }
 
-//function combineActions(reducerMap) {
-//
-//}
-//
-//const actions = combineActions({
-//  todos: todoActions
-//})
-
 const actions = {
   todos: todoActions
 }
@@ -33,60 +25,49 @@ let state = {
   todos: [{text: "aaa", completed: false}]
 }
 
-let fnMap = {}
-
-function buildFnNameMap() {
+function buildFnMap(actions) {
+  let ret = {}
   for (const field in actions) {
-    for (const field2 in actions[field]) {
-      console.log('field2', field2);
-
-      fnMap[field2] = [field]
+    const action = actions[field]
+    if (typeof action === 'function') {
+      ret[action] = []
+    } else {
+      const tmpMap = buildFnMap(action)
+      for (const fn in tmpMap) {
+        ret[fn] = [field, ...tmpMap[fn]]
+      }
     }
   }
+
+  return ret
 }
 
-buildFnNameMap()
-//console.log(fnMap);
+let fnMap2 = buildFnMap(actions)
+//console.log(fnMap2);
+//console.log(fnMap2);
 
-function findChildState(state, name) {
-  const paths = fnMap[name]
+function findChildState(state, fn) {
+  const paths = fnMap2[fn]
   for (const field of paths) {
     state = state[field]
   }
   return state
 }
 
-function updateChildState(state, name, newChildState) {
 
-  const paths = fnMap[name]
-
-  return updateChildState2(state, paths, newChildState)
-}
-
-function updateChildState2(state, paths, newChildState) {
+function updateChildState(state, paths, newChildState) {
   if (paths.length == 0) {
     return newChildState
   }
 
   const head = paths[0]
   const tail = paths.slice(1)
-  console.log('tail', tail);
+//  console.log('tail', tail);
 
   return {
     ...state,
-    [head]: updateChildState2(state[head], tail, newChildState)
+    [head]: updateChildState(state[head], tail, newChildState)
   }
-
-//  let oldState = state
-//  console.log('update child state for state', state);
-//  for (const field of paths) {
-//    state = state[field]
-//  }
-//
-//  state = newChildState
-//
-//  console.log('state', state);
-//  console.log('old state', oldState);
 }
 
 
@@ -102,7 +83,7 @@ function doReduce(fn, args) {
   // Find path
 
   // Find `state child` by fn name
-  let childState = findChildState(state, fnName)
+  let childState = findChildState(state, fn)
   console.log('child state', childState);
 
   // Reduce `state child`
@@ -110,13 +91,18 @@ function doReduce(fn, args) {
   console.log('new child state', childState);
 
   // Update `state child`
-  state = updateChildState(state, fnName, childState)
+  state = updateChildState(state, fnMap2[fn], childState)
   console.log('new state', state);
+
+  return state
 }
 
-doReduce(todoActions.addTodo, "Hello")
+
 
 test('Should run reducers', () => {
+  const newState = doReduce(todoActions.addTodo, "Hello")
+  expect(newState.todos.length).toBe(2)
+
   let store = new Store(todoActions)
 
   const unsubscribe = store.subscribe((state) => {
