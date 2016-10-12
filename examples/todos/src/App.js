@@ -7,96 +7,21 @@ import React, {Component} from 'react';
 //import './App.styl';
 //import styles from './Modules.css';
 
-import Store from '../../../lib/store'
-
-let nextTodoId = 0
-const actions = {
-  todos: {
-    addTodo: (text) => ([
-      // reducers for completeTodo
-      (state=[]) => ([...state, {id: nextTodoId++, text, completed: false}])
-    ]),
-    toggleTodo: (id) => ([
-      (state=[]) => state.map(t => {
-          if (t.id !== id) {
-            return t
-          } else {
-            return {...t, completed: !t.completed}
-          }
-        })
-    ])
-  },
-  visibilityFilter: {
-    setVisibilityFilter: (filter) => state => filter
-  }
-}
-
-let store = new Store(actions)
-import invariant from 'invariant'
-
-const emptyProps = (state) => ({})
-
-const connect = (stateToProps=emptyProps) => (Comp) => {
-  class Connect extends Component {
-    constructor(props, context) {
-      super(props, context)
-  //    this.version = version
-//      this.store = props.store || context.store
-      this.store = store
-
-      invariant(this.store,
-        `Could not find "store" in either the context or ` +
-        `props`
-      )
-
-      const storeState = this.store.getState()
-      this.state = { storeState }
-//      console.log('store state', this.state);
-  //    this.clearCache()
-    }
-
-    componentWillMount() {
-      console.log('subscribe');
-      this.unsubscribe = store.subscribe(this.storeStateChanged)
-    }
-
-    componentWillUnmount() {
-      console.log('unsubscribe');
-      if (this.unsubscribe) {
-        this.unsubscribe()
-      }
-    }
-
-    storeStateChanged = () => {
-      console.log('store changed', this.store.getState());
-      const storeState = stateToProps(this.store.getState())
-//      console.log('props', storeState, typeof storeState);
-      this.setState({storeState})
-    }
-
-    render() {
-//      console.log('connect props', this.props);
-      return (
-        <Comp {...this.state.storeState} />
-      )
-    }
-  }
-
-  return Connect
-}
+import connect from '../../../lib/components/connect'
+import {todoActions, visibilityFilterActions} from './actions'
 
 class _App extends Component {
   addTodo = () => {
     console.log('add todo');
-    store.dispatch(actions.todos.addTodo, "Hello")
+    this.props.dispatch(todoActions.addTodo, "Hello")
   }
 
   changeVisibility(filter) {
-    store.dispatch(actions.visibilityFilter.setVisibilityFilter, filter)
+    this.props.dispatch(visibilityFilterActions.setVisibilityFilter, filter)
   }
 
   toggleTodo(id) {
-    store.dispatch(actions.todos.toggleTodo, id)
+    this.props.dispatch(todoActions.toggleTodo, id)
   }
 
   render() {
@@ -127,7 +52,7 @@ class _App extends Component {
   }
 }
 
-const App = connect(({todos, visibilityFilter}) => {
+const mapStateToProps = ({todos, visibilityFilter}) => {
   let retTodos
   if (visibilityFilter === 'SHOW_COMPLETED') {
     retTodos = todos.filter(t => t.completed)
@@ -141,7 +66,9 @@ const App = connect(({todos, visibilityFilter}) => {
     todos: retTodos,
     visibilityFilter
   }
-})(_App)
+}
+
+const App = connect(mapStateToProps)(_App)
 
 class MyApp extends Component {
   render() {
@@ -154,4 +81,4 @@ class MyApp extends Component {
   }
 }
 
-export default MyApp;
+export default App;
