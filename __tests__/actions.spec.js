@@ -23,7 +23,6 @@ const visibilityFilterActions = {
 
 const actions = {
   todos: todoActions,
-  // TODO Sometime, developer forget to
   visibilityFilter: visibilityFilterActions
 }
 

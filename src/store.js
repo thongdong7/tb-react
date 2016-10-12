@@ -1,7 +1,16 @@
 import invariant from 'invariant'
 
+function executeReducers(reducers, state) {
+  if (reducers.constructor === Array) {
+    return executeReducersArray(reducers, state)
+  } else {
+    return executeReducersArray([reducers], state)
+  }
+}
+
 export function executeReducersArray(reducers, state) {
   for (let reducer of reducers) {
+    invariant(typeof reducer === 'function', `Reducer must be function. Got ${reducer}`)
     state = reducer(state)
   }
 
@@ -92,12 +101,12 @@ export default class Store {
 //    console.log('child state', childState);
 
     // Reduce `state child`
-    childState = executeReducersArray(reducers, childState)
+    childState = executeReducers(reducers, childState)
 //    console.log('new child state', childState);
 
     // Update `state child`
     this.state = this.updateChildState(this.state, this.fnMap[fn], childState)
-//    console.log('new state', this.state);
+//    console.log('new state', this.state, this.fnMap[fn]);
 
     return this.state
   }
