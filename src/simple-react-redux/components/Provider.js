@@ -26,7 +26,6 @@ export default class Provider extends Component {
   constructor(props, context) {
     super(props, context)
     this.store = props.store
-    console.log('provider store', this.store);
   }
 
   render() {

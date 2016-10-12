@@ -5,13 +5,11 @@ import invariant from 'invariant'
 
 const emptyProps = (state) => ({})
 
-const connect = (stateToProps=emptyProps) => (Comp) => {
+const connect = (stateToProps=emptyProps, mapDispatchToProps) => (Comp) => {
   class Connect extends Component {
     constructor(props, context) {
       super(props, context)
   //    this.version = version
-      console.log(props);
-      console.log(context);
       this.store = props.store || context.store
 //      this.store = store
 
@@ -24,10 +22,15 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
       this.state = { storeState }
 //      console.log('store state', this.state);
   //    this.clearCache()
+      if (mapDispatchToProps) {
+        this.dispatchToProps = mapDispatchToProps(this.store.dispatch)
+      } else {
+        this.dispatchToProps = {}
+      }
     }
 
     componentWillMount() {
-      console.log('subscribe');
+//      console.log('subscribe');
       this.unsubscribe = this.store.subscribe(this.storeStateChanged)
     }
 
@@ -39,7 +42,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
     }
 
     storeStateChanged = () => {
-      console.log('store changed', this.store.getState());
+//      console.log('store changed', this.store.getState());
       const storeState = stateToProps(this.store.getState())
 //      console.log('props', storeState, typeof storeState);
       this.setState({storeState})
@@ -48,7 +51,7 @@ const connect = (stateToProps=emptyProps) => (Comp) => {
     render() {
 //      console.log('connect props', this.props);
       return (
-        <Comp {...this.state.storeState} dispatch={this.store.dispatch} />
+        <Comp {...this.state.storeState} {...this.dispatchToProps} dispatch={this.store.dispatch} />
       )
     }
   }

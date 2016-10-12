@@ -10,32 +10,21 @@ import React, {Component} from 'react';
 import {connect} from '../../../lib/simple-react-redux'
 import {todoActions, visibilityFilterActions} from './actions'
 
-console.log('connect', connect);
-
 class _App extends Component {
-  addTodo = () => {
-    console.log('add todo');
-    this.props.dispatch(todoActions.addTodo, "Hello")
-  }
-
-  changeVisibility(filter) {
-    this.props.dispatch(visibilityFilterActions.setVisibilityFilter, filter)
-  }
-
-  toggleTodo(id) {
-    this.props.dispatch(todoActions.toggleTodo, id)
-  }
+//  changeVisibility(filter) {
+//    this.props.dispatch(visibilityFilterActions.setVisibilityFilter, filter)
+//  }
 
   render() {
     const {todos=[]} = this.props
-    console.log('todos', this.props);
+//    console.log('todos', this.props);
     return (
       <div className="App">
         app
-        <button onClick={this.addTodo}>Add</button>
-        <button onClick={() => this.changeVisibility('SHOW_ALL')}>Show All</button>
-        <button onClick={() => this.changeVisibility('SHOW_ACTIVE')}>Active</button>
-        <button onClick={() => this.changeVisibility('SHOW_COMPLETED')}>Completed</button>
+        <button onClick={this.props.addTodo}>Add</button>
+        <button onClick={() => this.props.changeVisibility('SHOW_ALL')}>Show All</button>
+        <button onClick={() => this.props.changeVisibility('SHOW_ACTIVE')}>Active</button>
+        <button onClick={() => this.props.changeVisibility('SHOW_COMPLETED')}>Completed</button>
         <ul>
           {todos.map((t, idx) => {
             return (
@@ -44,7 +33,7 @@ class _App extends Component {
                 style={{
                   textDecoration: t.completed ? 'line-through' : 'none'
                 }}
-                onClick={() => this.toggleTodo(t.id)}
+                onClick={() => this.props.toggleTodo(t.id)}
               >{t.id} {t.text}</li>
             )
           })}
@@ -70,17 +59,32 @@ const mapStateToProps = ({todos, visibilityFilter}) => {
   }
 }
 
-const App = connect(mapStateToProps)(_App)
-
-class MyApp extends Component {
-  render() {
-    return (
-      <div>
-        My App1
-        <App />
-      </div>
-    )
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addTodo: () => {
+//      console.log('add todo');
+      dispatch(todoActions.addTodo, "Hello")
+    },
+    toggleTodo: (id) => {
+      dispatch(todoActions.toggleTodo, id)
+    },
+    changeVisibility: (filter) => {
+      dispatch(visibilityFilterActions.setVisibilityFilter, filter)
+    }
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(_App)
+
+//class MyApp extends Component {
+//  render() {
+//    return (
+//      <div>
+//        My App1
+//        <App />
+//      </div>
+//    )
+//  }
+//}
+
+//export default App;
