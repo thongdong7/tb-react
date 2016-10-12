@@ -52,13 +52,13 @@ export default class Store {
     return this.state
   }
 
-  dispatch1 = (action, ...args) => {
-    const reducers = this.actions[action.name](...args)
-    this.state = executeReducersArray(reducers, this.state)
-    for (const callback of this.subscribers) {
-      callback(this.state)
-    }
-  }
+//  dispatch1 = (action, ...args) => {
+//    const reducers = this.actions[action.name](...args)
+//    this.state = executeReducersArray(reducers, this.state)
+//    for (const callback of this.subscribers) {
+//      callback(this.state)
+//    }
+//  }
 
   findChildState = (state, fn) => {
     const paths = this.fnMap[fn]
