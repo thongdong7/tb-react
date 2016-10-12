@@ -17,8 +17,14 @@ const todoActions = {
   ])
 }
 
+const visibilityFilterActions = {
+  setVisibilityFilter: (filter) => state => filter
+}
+
 const actions = {
-  todos: todoActions
+  todos: todoActions,
+  // TODO Sometime, developer forget to
+  visibilityFilter: visibilityFilterActions
 }
 
 
@@ -43,6 +49,13 @@ test('Should run reducers', () => {
   todos = store.getState().todos
   expect(todos[0].completed).toBe(false)
   expect(todos[1].completed).toBe(false)
+
+  store.dispatch(visibilityFilterActions.setVisibilityFilter, 'SHOW_ALL')
+
+//  console.log(store.getState());
+
+  expect(store.getState().visibilityFilter).toBe('SHOW_ALL')
+  expect(store.getState().todos.length).toBe(2)
 
   unsubscribe()
 
