@@ -1,5 +1,14 @@
+export function executeReducersArray(reducers, state) {
+  for (let reducer of reducers) {
+    state = reducer(state)
+  }
+
+  return state
+}
+
 export default class Store {
-  constructor() {
+  constructor(actions) {
+    this.actions = actions
     this.state = undefined
     this.subscribers = []
   }
@@ -23,14 +32,9 @@ export default class Store {
     return this.state
   }
 
-  dispatch = (reducers) => {
-    let state = this.state
-    for (let reducer of reducers) {
-      state = reducer(state)
-    }
-
-//    console.log(state)
-    this.state = state
+  dispatch = (action, ...args) => {
+    const reducers = this.actions[action.name](...args)
+    this.state = executeReducersArray(reducers, this.state)
     for (const callback of this.subscribers) {
       callback(this.state)
     }
