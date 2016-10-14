@@ -1,5 +1,20 @@
 import invariant from 'invariant'
 
+export function AsyncAction(fn) {
+//  console.log('this is async action');
+  return {
+    async: fn
+  }
+}
+
+function isAsyncAction(data) {
+  return data.async !== undefined
+}
+
+function getAsyncFunction(data) {
+  return data.async
+}
+
 function executeReducers(reducers, state) {
   if (reducers.constructor === Array) {
     return executeReducersArray(reducers, state)
@@ -87,7 +102,14 @@ export default function createStore(actions) {
   }
 
   function dispatch(fn, ...args) {
+    if (isAsyncAction(fn)) {
+//      console.log('is async', fn);
+      fn = getAsyncFunction(fn)
+      return fn(dispatch)(...args)
+    }
+
     invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
+
 
     // Get reducers
     const reducers = fn(...args)

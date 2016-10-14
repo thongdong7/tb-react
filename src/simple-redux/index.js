@@ -1,3 +1,4 @@
-import Store from './store'
+import Store, {AsyncAction} from './store'
 
+export {AsyncAction}
 export default Store
