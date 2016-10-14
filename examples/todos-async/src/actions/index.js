@@ -3,7 +3,7 @@ import {AsyncAction, ReducerListAppend, ReducerListConcat, ReducerListMatchChang
 let nextTodoId = 0
 
 export const loadingActions = {
-  setLoading: loading => state => loading
+  setLoading: ReducerSet
 }
 
 
