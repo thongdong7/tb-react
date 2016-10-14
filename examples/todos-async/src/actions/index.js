@@ -2,6 +2,10 @@ import {AsyncAction} from '../../../../lib/simple-redux'
 
 let nextTodoId = 0
 
+export const loadingActions = {
+  setLoading: loading => state => loading
+}
+
 export const todoActions = {
   addTodo: (text) => ([
     // reducers for addTodo
@@ -19,10 +23,12 @@ export const todoActions = {
   ]),
   load: AsyncAction(dispatch => () => {
     console.log('async load');
+    dispatch(loadingActions.setLoading, true)
     fetch('https://api.github.com/users').then(
       response => response.json().then(data => {
         console.log('data', data);
         data.forEach(item => dispatch(todoActions.addTodo, item.login))
+        dispatch(loadingActions.setLoading, false)
       })
     )
   })
@@ -37,5 +43,5 @@ export default {
   // Combine actions
   todos: todoActions,
   visibilityFilter: visibilityFilterActions,
-
+  loading: loadingActions
 }

@@ -6,10 +6,10 @@ import React, {Component} from 'react';
 import {connect} from '../../../lib/simple-react-redux'
 import {todoActions, visibilityFilterActions} from './actions'
 
-const App = ({todos=[], loadData, addTodo, changeVisibility, toggleTodo}) => {
+const App = ({todos=[], loading, loadData, addTodo, changeVisibility, toggleTodo}) => {
   return (
     <div className="App">
-      app
+      app {loading && "loading..."}
       <button onClick={loadData}>loadData</button>
       <button onClick={addTodo}>Add</button>
       <button onClick={() => changeVisibility('SHOW_ALL')}>Show All</button>
@@ -32,7 +32,7 @@ const App = ({todos=[], loadData, addTodo, changeVisibility, toggleTodo}) => {
   )
 }
 
-const mapStateToProps = ({todos, visibilityFilter}) => {
+const mapStateToProps = ({todos, visibilityFilter, loading}) => {
   let retTodos
   if (visibilityFilter === 'SHOW_COMPLETED') {
     retTodos = todos.filter(t => t.completed)
@@ -44,7 +44,8 @@ const mapStateToProps = ({todos, visibilityFilter}) => {
 
   return {
     todos: retTodos,
-    visibilityFilter
+    visibilityFilter,
+    loading
   }
 }
 
