@@ -5,7 +5,7 @@ import {RemoteButton} from './formData'
 import {Link, NavLink, NavBar} from './link'
 import {Button, LinkButton, ModalButton} from './button'
 import {selectProps} from './props'
-import {store} from './store'
+import store from './simple-redux'
 
 import {get, post, form} from './mapUtils'
 import toastr from 'toastr'
