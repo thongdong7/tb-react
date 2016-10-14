@@ -1,5 +1,8 @@
-import Store, {AsyncAction} from './store'
-import {logMiddleware, asyncActionMiddleware} from './middleware'
+import Store from './store'
+import {middlewareLog, middlewareAsyncAction, AsyncAction} from './middleware'
 
-export {AsyncAction, logMiddleware, asyncActionMiddleware}
+export {
+  middlewareLog,
+  middlewareAsyncAction, AsyncAction,
+}
 export default Store

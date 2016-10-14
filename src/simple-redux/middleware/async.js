@@ -1,5 +1,12 @@
 import {StopDispatchException} from '../error'
 
+export function AsyncAction(fn) {
+//  console.log('this is async action');
+  return {
+    async: fn
+  }
+}
+
 function isAsyncAction(data) {
   return data.async !== undefined
 }
@@ -8,7 +15,7 @@ function getAsyncFunction(data) {
   return data.async
 }
 
-export default function asyncActionMiddleware(dispatch, fn, ...args) {
+export default function middlewareAsyncAction(dispatch, fn, ...args) {
 //  console.log('async middle ware');
   if (isAsyncAction(fn)) {
     console.log('process async action');
