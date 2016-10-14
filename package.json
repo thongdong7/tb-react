@@ -30,5 +30,8 @@
     "react-modal": "^1.5.2",
     "react-router": "^2.8.1",
     "toastr": "^2.1.2"
+  },
+  "jest": {
+    "testPathIgnorePatterns": ["/examples/", "/node_modules/"]
   }
 }
