@@ -1,5 +1,5 @@
-import {ReducerListAppend, ReducerListConcat} from './list'
+export * from './list'
 
-export {
-  ReducerListAppend, ReducerListConcat,
+export function ReducerSet(item) {
+  return state => item
 }

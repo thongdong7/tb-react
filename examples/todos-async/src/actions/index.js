@@ -1,10 +1,11 @@
-import {AsyncAction, ReducerListAppend, ReducerListConcat} from '../../../../lib/simple-redux'
+import {AsyncAction, ReducerListAppend, ReducerListConcat, ReducerListMatchChange, ReducerSet} from '../../../../lib/simple-redux'
 
 let nextTodoId = 0
 
 export const loadingActions = {
   setLoading: loading => state => loading
 }
+
 
 export const todoActions = {
   addTodo: (text) => ReducerListAppend({id: nextTodoId++, text, completed: false}),
@@ -13,16 +14,10 @@ export const todoActions = {
     nextTodoId += items.length
     return ReducerListConcat(items)
   },
-  toggleTodo: (id) => ([
-    // reducers for toggleTodo
-    (state=[]) => state.map(t => {
-        if (t.id !== id) {
-          return t
-        } else {
-          return {...t, completed: !t.completed}
-        }
-      })
-  ]),
+  toggleTodo: (id) => ReducerListMatchChange(
+    t => t.id === id,
+    t => ({...t, completed: !t.completed})
+  ),
   load: AsyncAction(dispatch => () => {
     console.log('async load');
     dispatch(loadingActions.setLoading, true)
@@ -40,7 +35,7 @@ export const todoActions = {
 
 export const visibilityFilterActions = {
   // This action only has one reducer
-  setVisibilityFilter: (filter) => state => filter
+  setVisibilityFilter: ReducerSet
 }
 
 export default {
