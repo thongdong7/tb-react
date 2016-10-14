@@ -1,4 +1,4 @@
-import createStore, {AsyncAction} from '../src/simple-redux'
+import createStore, {middlewareAsyncAction, AsyncAction} from '../src/simple-redux'
 
 //console.log('aynsc 1', AsyncAction);
 
@@ -25,7 +25,7 @@ const actions = {
 }
 
 test('Should run async actions', () => {
-  let store = createStore(actions)
+  let store = createStore(actions, middlewareAsyncAction)
 
   const unsubscribe = store.subscribe((state) => {
 //    console.log('state', state);

@@ -1,4 +1,4 @@
-import {AsyncAction} from '../../../../lib/simple-redux'
+import {AsyncAction, ReducerListAppend, ReducerListConcat} from '../../../../lib/simple-redux'
 
 let nextTodoId = 0
 
@@ -7,10 +7,12 @@ export const loadingActions = {
 }
 
 export const todoActions = {
-  addTodo: (text) => ([
-    // reducers for addTodo
-    (state=[]) => ([...state, {id: nextTodoId++, text, completed: false}])
-  ]),
+  addTodo: (text) => ReducerListAppend({id: nextTodoId++, text, completed: false}),
+  addTodos: (texts) => {
+    const items = texts.map((text, i) => ({id: nextTodoId + i, text, completed: false}))
+    nextTodoId += items.length
+    return ReducerListConcat(items)
+  },
   toggleTodo: (id) => ([
     // reducers for toggleTodo
     (state=[]) => state.map(t => {
@@ -27,7 +29,9 @@ export const todoActions = {
     fetch('https://api.github.com/users').then(
       response => response.json().then(data => {
         console.log('data', data);
-        data.forEach(item => dispatch(todoActions.addTodo, item.login))
+        const texts = data.map(item => item.login)
+//        data.forEach(item => dispatch(todoActions.addTodo, item.login))
+        dispatch(todoActions.addTodos, texts)
         dispatch(loadingActions.setLoading, false)
       })
     )

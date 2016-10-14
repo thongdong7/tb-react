@@ -15,10 +15,10 @@ function getAsyncFunction(data) {
   return data.async
 }
 
-export default function middlewareAsyncAction(dispatch, fn, ...args) {
+export function middlewareAsyncAction(dispatch, fn, ...args) {
 //  console.log('async middle ware');
   if (isAsyncAction(fn)) {
-    console.log('process async action');
+//    console.log('process async action');
 //      console.log('is async', fn);
     fn = getAsyncFunction(fn)
     fn(dispatch)(...args)

@@ -1,8 +1,5 @@
 import Store from './store'
-import {middlewareLog, middlewareAsyncAction, AsyncAction} from './middleware'
+export * from './middleware'
+export * from './reducer'
 
-export {
-  middlewareLog,
-  middlewareAsyncAction, AsyncAction,
-}
 export default Store

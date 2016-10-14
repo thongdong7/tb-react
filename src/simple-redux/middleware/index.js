@@ -1,4 +1,2 @@
-import middlewareLog from './log'
-import middlewareAsyncAction, {AsyncAction} from './async'
-
-export {middlewareLog, middlewareAsyncAction, AsyncAction}
+export * from './log'
+export * from './async'
