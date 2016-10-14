@@ -1,3 +1,4 @@
+import {StopDispatchException} from './error'
 import invariant from 'invariant'
 
 export function AsyncAction(fn) {
@@ -49,7 +50,7 @@ function buildFnMap(actions) {
   return ret
 }
 
-export default function createStore(actions) {
+export default function createStore(actions, ...middlewares) {
   const fnMap = buildFnMap(actions)
   let subscribers = []
   let state = undefined
@@ -102,14 +103,30 @@ export default function createStore(actions) {
   }
 
   function dispatch(fn, ...args) {
-    if (isAsyncAction(fn)) {
-//      console.log('is async', fn);
-      fn = getAsyncFunction(fn)
-      return fn(dispatch)(...args)
+//    console.log('dispatch');
+    for (const middleware of middlewares) {
+//      console.log('middleware', middleware);
+//      console.log(dispatch);
+//      console.log(fn);
+
+      try {
+        middleware(dispatch, fn, ...args)
+      } catch (e) {
+        if (e instanceof StopDispatchException) {
+          return
+        }
+
+        throw e
+      }
     }
 
-    invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
+//    if (isAsyncAction(fn)) {
+////      console.log('is async', fn);
+//      fn = getAsyncFunction(fn)
+//      return fn(dispatch)(...args)
+//    }
 
+    invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
 
     // Get reducers
     const reducers = fn(...args)
