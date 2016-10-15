@@ -1,14 +1,8 @@
 import invariant from 'invariant'
 import Promise from 'promise'
+import 'whatwg-fetch'
 
 import {StopDispatchException} from '../error'
-
-//export function FetchAction(url, options={}) {
-//  options.start && invariant(typeof options.start === 'function', `FetchAction.options.start must be a function`)
-//
-//  options.success && invariant(typeof options.success === 'function', `FetchAction.options.success must be a function`)
-//
-//  options.error && invariant(typeof options.error === 'function', `FetchAction.options.error must be a function`)
 
 export function FetchAction(fn) {
   return {

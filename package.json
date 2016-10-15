@@ -20,8 +20,7 @@
     "chokidar": "^1.6.0",
     "jest": "^16.0.1",
     "react-test-renderer": "^15.3.2",
-    "webpack": "^1.13.2",
-    "whatwg-fetch": "^1.0.0"
+    "webpack": "^1.13.2"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
@@ -31,7 +30,8 @@
     "react-dom": "^15.3.2",
     "react-modal": "^1.5.2",
     "react-router": "^2.8.1",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "whatwg-fetch": "^1.0.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
