@@ -22,19 +22,26 @@ const visibilityFilterActions = {
 }
 
 const actions = {
-  todos: todoActions,
-  visibilityFilter: visibilityFilterActions
+  todos: [todoActions, []],
+  visibilityFilter: [visibilityFilterActions, 'SHOW_ALL']
 }
 
 
 test('Should run reducers', () => {
   let store = createStore(actions)
 
+  const initState = store.getState()
+
+//  console.log('init state', initState);
+  expect(initState.todos.length).toBe(0)
+  expect(initState.visibilityFilter).toBe('SHOW_ALL')
+
   const unsubscribe = store.subscribe((state) => {
 //    console.log('state', state);
   })
 
   store.dispatch(todoActions.addTodo, "Hello")
+//  console.log('first state', store.getState());
   expect(store.getState().todos.length).toBe(1)
   store.dispatch(todoActions.addTodo, "World")
   store.dispatch(todoActions.toggleTodo, 1)

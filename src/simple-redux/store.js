@@ -30,45 +30,47 @@ function getActionName(action) {
   return action._name || action.name || action
 }
 
-function buildFnMap(actions, isAction) {
-  let ret = new IdDict()
+function buildFnMap(actions, isAction, state) {
+
+  let fnMap = new IdDict()
 
   for (const field in actions) {
-    const action = actions[field]
-//    console.log('field', field, action);
+
+    if (state == undefined) {
+      state = {}
+    }
+    const config = actions[field]
+    let action
+    let initState
+    if (config.length === 2) {
+      [action, initState] = config
+      state[field] = initState
+//      console.log('init field', field, initState);
+
+    } else {
+      action = config
+    }
 
     if (isAction(action)) {
 //      console.log('found actions', action);
-      ret.put(action, [])
+      fnMap.put(action, [])
+//      state[field] = undefined
     } else {
-      const tmpMap = buildFnMap(action, isAction)
+//      console.log('field', field);
+      const tmpRet = buildFnMap(action, isAction, undefined)
+      const tmpMap = tmpRet.fnMap
+//      state[field] = tmpRet.state
       for (const fn of tmpMap.keys()) {
-        invariant(!ret.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
-        ret.put(fn, [field, ...tmpMap.get(fn)])
+        invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
+        fnMap.put(fn, [field, ...tmpMap.get(fn)])
       }
     }
-//    continue
-//    if (typeof action === 'function') {
-//      invariant(ret[action] === undefined, 'Could not map action for field ${field} as had another action with the same function')
-//      ret[action] = []
-//    } else if (isPlainObject(action)) {
-//      if (isActionObject(action)) {
-////        console.log('action object', field);
-//        ret[action] = []
-//      } else {
-////        console.log('buildFnMap', field, action);
-//        const tmpMap = buildFnMap(action)
-//        for (const fn in tmpMap) {
-//          invariant(ret[fn] === undefined, `Could not map action for field ${field} as had another action with the same function: ${fn}`)
-//          ret[fn] = [field, ...tmpMap[fn]]
-//        }
-//      }
-//    } else {
-//      console.log('action is not plain object', field, action);
-//    }
   }
 
-  return ret
+  return {
+    fnMap,
+    state
+  }
 }
 
 export default function createStore(actions, ...middlewares) {
@@ -77,11 +79,13 @@ export default function createStore(actions, ...middlewares) {
     return isMiddlewareAction || typeof action === 'function'
   }
 
-  const fnMap = buildFnMap(actions, isAction)
+  const mapResult = buildFnMap(actions, isAction, undefined)
+  const fnMap = mapResult.fnMap
+  let state = mapResult.state
 //  console.log(fnMap);
 //  return
   let subscribers = []
-  let state = undefined
+//  let state = undefined
 
   function subscribe(callback) {
     if (subscribers.indexOf(callback) >= 0) {
@@ -104,7 +108,7 @@ export default function createStore(actions, ...middlewares) {
 
   function findChildState(state, fn) {
     const paths = fnMap.get(fn)
-    console.log('path', fn, paths);
+//    console.log('path', fn, paths);
     if (!paths) {
       return state
     }
