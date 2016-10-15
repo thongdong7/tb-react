@@ -56,7 +56,7 @@ export const visibilityFilterActions = {
 
 export default {
   // Combine actions
-  todos: todoActions,
-  visibilityFilter: visibilityFilterActions,
-  loading: loadingActions
+  todos: [todoActions, []],
+  visibilityFilter: [visibilityFilterActions, 'SHOW_ALL'],
+  loading: [loadingActions, false]
 }
