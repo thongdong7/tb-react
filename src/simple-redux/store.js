@@ -1,4 +1,5 @@
 import {StopDispatchException} from './error'
+import isPlainObject from 'lodash/isPlainObject'
 import invariant from 'invariant'
 
 
@@ -19,17 +20,36 @@ export function executeReducersArray(reducers, state) {
   return state
 }
 
+function isActionObject(action) {
+  return action._action === true
+}
+
 function buildFnMap(actions) {
   let ret = {}
+
+  if (actions._action) {
+    // Action object
+
+  }
+
   for (const field in actions) {
     const action = actions[field]
+//    console.log('field', field);
     if (typeof action === 'function') {
       ret[action] = []
-    } else {
-      const tmpMap = buildFnMap(action)
-      for (const fn in tmpMap) {
-        ret[fn] = [field, ...tmpMap[fn]]
+    } else if (isPlainObject(action)) {
+      if (isActionObject(action)) {
+//        console.log('action object', field);
+        ret[action] = []
+      } else {
+//        console.log('buildFnMap', field, action);
+        const tmpMap = buildFnMap(action)
+        for (const fn in tmpMap) {
+          ret[fn] = [field, ...tmpMap[fn]]
+        }
       }
+    } else {
+      console.log('action is not plain object', field, action);
     }
   }
 
