@@ -42,22 +42,14 @@ function buildFnActionConfig(actions, isAction) {
 
 function buildFnMap(config, isAction, state) {
   let fnMap = new IdDict()
-  let _isAction = false
 
   if (isActionConfig(config)) {
-    _isAction = true
     let [action, initState] = config
     state = initState
 //    console.log('map single field', initState);
 
     const tmpMap = buildFnActionConfig(action, isAction)
     fnMap.update(tmpMap)
-
-//    const [tmpMap, _] = buildFnMap(action, isAction)
-//    for (const fn of tmpMap.keys()) {
-//      invariant(!fnMap.has(fn), `Could not map action as had another action with the same function: ${fn}`)
-//      fnMap.put(fn, tmpMap.get(fn))
-//    }
   } else {
     for (const field in config) {
       const childConfig = config[field]
@@ -73,49 +65,12 @@ function buildFnMap(config, isAction, state) {
         invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
         fnMap.put(fn, [field, ...tmpMap.get(fn)])
       }
-
-      continue
-      /*
-      let action
-      let initState
-      if (isActionConfig(childConfig)) {
-        [action, initState] = childConfig
-
-        if (state == undefined) {
-          state = {}
-        }
-        state[field] = initState
-  //      console.log('init field', field, initState);
-
-      } else {
-        action = childConfig
-      }
-
-      if (isAction(action)) {
-  //      console.log('found actions', action);
-        fnMap.put(action, [])
-  //      state[field] = undefined
-      } else {
-        const [tmpMap, initState] = buildFnMap(action, isAction)
-        console.log('field', field, initState);
-        if (state == undefined) {
-          state = {}
-        }
-        state[field] = initState
-
-        for (const fn of tmpMap.keys()) {
-          invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
-          fnMap.put(fn, [field, ...tmpMap.get(fn)])
-        }
-      }
-      */
     }
   }
 
   return [
     fnMap,
     state,
-//    _isAction
   ]
 }
 
