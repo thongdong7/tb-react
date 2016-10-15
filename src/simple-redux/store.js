@@ -27,11 +27,11 @@ function isActionConfig(data) {
 }
 
 
-function buildFnMap(actions, isAction, state) {
+function buildFnMap(config, isAction, state) {
   let fnMap = new IdDict()
 
-  if (isActionConfig(actions)) {
-    let [action, initState] = actions
+  if (isActionConfig(config)) {
+    let [action, initState] = config
     state = initState
 
     const [tmpMap, _] = buildFnMap(action, isAction)
@@ -40,11 +40,11 @@ function buildFnMap(actions, isAction, state) {
       fnMap.put(fn, tmpMap.get(fn))
     }
   } else {
-    for (const field in actions) {
+    for (const field in config) {
       if (state == undefined) {
         state = {}
       }
-      const childConfig = actions[field]
+      const childConfig = config[field]
       let action
       let initState
       if (childConfig.length === 2) {
