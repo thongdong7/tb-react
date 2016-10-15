@@ -1,7 +1,7 @@
 import createStore, {
   ReducerSet,
   IdDict
-} from '../src/simple-redux'
+} from '../../src/simple-redux'
 
 
 test('ReducerSet should return different function', () => {

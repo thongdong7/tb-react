@@ -1,4 +1,4 @@
-import createStore from '../src/simple-redux'
+import createStore from '../../src/simple-redux'
 
 let nextTodoId = 0
 const todoActions = {
