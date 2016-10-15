@@ -41,14 +41,15 @@ function buildFnMap(config, isAction, state) {
     }
   } else {
     for (const field in config) {
-      if (state == undefined) {
-        state = {}
-      }
       const childConfig = config[field]
       let action
       let initState
       if (isActionConfig(childConfig)) {
         [action, initState] = childConfig
+
+        if (state == undefined) {
+          state = {}
+        }
         state[field] = initState
   //      console.log('init field', field, initState);
 
