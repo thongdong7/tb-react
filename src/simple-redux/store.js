@@ -1,7 +1,7 @@
 import {StopDispatchException} from './error'
 import IdDict from './iddict'
 
-import isPlainObject from 'lodash/isPlainObject'
+//import isPlainObject from 'lodash/isPlainObject'
 import invariant from 'invariant'
 
 
