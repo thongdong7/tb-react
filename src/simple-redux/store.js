@@ -42,10 +42,13 @@ function buildFnActionConfig(actions, isAction) {
 
 function buildFnMap(config, isAction, state) {
   let fnMap = new IdDict()
+  let _isAction = false
 
   if (isActionConfig(config)) {
+    _isAction = true
     let [action, initState] = config
     state = initState
+//    console.log('map single field', initState);
 
     const tmpMap = buildFnActionConfig(action, isAction)
     fnMap.update(tmpMap)
@@ -58,6 +61,21 @@ function buildFnMap(config, isAction, state) {
   } else {
     for (const field in config) {
       const childConfig = config[field]
+
+      const [tmpMap, initState] = buildFnMap(childConfig, isAction)
+      if (state == undefined) {
+        state = {}
+      }
+      state[field] = initState
+//      console.log('tmp map for field', field, tmpMap);
+
+      for (const fn of tmpMap.keys()) {
+        invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
+        fnMap.put(fn, [field, ...tmpMap.get(fn)])
+      }
+
+      continue
+      /*
       let action
       let initState
       if (isActionConfig(childConfig)) {
@@ -78,20 +96,26 @@ function buildFnMap(config, isAction, state) {
         fnMap.put(action, [])
   //      state[field] = undefined
       } else {
-  //      console.log('field', field);
-        const [tmpMap, _] = buildFnMap(action, isAction)
+        const [tmpMap, initState] = buildFnMap(action, isAction)
+        console.log('field', field, initState);
+        if (state == undefined) {
+          state = {}
+        }
+        state[field] = initState
 
         for (const fn of tmpMap.keys()) {
           invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
           fnMap.put(fn, [field, ...tmpMap.get(fn)])
         }
       }
+      */
     }
   }
 
   return [
     fnMap,
-    state
+    state,
+//    _isAction
   ]
 }
 

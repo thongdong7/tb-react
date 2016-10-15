@@ -21,7 +21,7 @@ const todoActions = {
 }
 
 const actions = {
-  todos: todoActions,
+  todos: [todoActions, []],
 }
 
 test('Should run async actions', () => {
