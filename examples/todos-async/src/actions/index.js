@@ -38,7 +38,8 @@ export const todoActions = {
 //      })
 //    )
 //  }),
-  load: FetchAction("https://api.github.com/users", {
+  load: FetchAction(() => ({
+    url: "https://api.github.com/users",
     start: (dispatch) => dispatch(loadingActions.setLoading, true),
     success: (dispatch, data) => {
       const texts = data.map(item => item.login)
@@ -46,7 +47,7 @@ export const todoActions = {
       dispatch(loadingActions.setLoading, false)
     },
     error: (dispatch) => {},
-  })
+  }))
 }
 
 export const visibilityFilterActions = {

@@ -3,24 +3,22 @@ import Promise from 'promise'
 
 import {StopDispatchException} from '../error'
 
-export function FetchAction(url, options={}) {
-  options.start && invariant(typeof options.start === 'function', `FetchAction.options.start must be a function`)
+//export function FetchAction(url, options={}) {
+//  options.start && invariant(typeof options.start === 'function', `FetchAction.options.start must be a function`)
+//
+//  options.success && invariant(typeof options.success === 'function', `FetchAction.options.success must be a function`)
+//
+//  options.error && invariant(typeof options.error === 'function', `FetchAction.options.error must be a function`)
 
-  options.success && invariant(typeof options.success === 'function', `FetchAction.options.success must be a function`)
-
-  options.error && invariant(typeof options.error === 'function', `FetchAction.options.error must be a function`)
-
+export function FetchAction(fn) {
   return {
     _action: true,
-    _fetch: {
-      url,
-      options
-    }
+    _fetch: fn
   }
 }
 
 function isFetchAction(data) {
-  return data._fetch !== undefined
+  return data._action === true && typeof data._fetch === 'function'
 }
 
 class MiddlewareFetch {
@@ -28,14 +26,15 @@ class MiddlewareFetch {
     return action._fetch !== undefined
   }
 
-  apply(dispatch, fn, ...args) {
-    if (isFetchAction(fn)) {
-      const {url, options} = fn._fetch
+  apply(dispatch, action, ...args) {
+    if (isFetchAction(action)) {
+      const fn = action._fetch
+      const {url, success, start} = fn(...args)
   //    console.log('fetch action', url, options);
-      if (options.start) {
-        invariant(typeof options.start === 'function', `FetchAction.options.start must be a function. ${typeof options.start} is provided`)
+      if (start) {
+        invariant(typeof start === 'function', `FetchAction.options.start must be a function. ${typeof start} is provided`)
 
-        options.start(dispatch)
+        start(dispatch)
       }
 
       const p = new Promise(
@@ -43,8 +42,8 @@ class MiddlewareFetch {
           fetch(url).then(
             response => response.json().then(data => {
       //        console.log('data', data);
-              if (options.success) {
-                options.success(dispatch, data)
+              if (success) {
+                success(dispatch, data)
               }
 
               resolve(data)
