@@ -20,6 +20,13 @@ export default class IdDict {
     }
   }
 
+  // Update another dict to this dict
+  update = (that) => {
+    for (const key of that.keys()) {
+      this.put(key, that.get(key))
+    }
+  }
+
   get = (key) => {
     if (!this.added.has(key)) {
       return undefined

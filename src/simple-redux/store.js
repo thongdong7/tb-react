@@ -26,6 +26,19 @@ function isActionConfig(data) {
   return data.length === 2
 }
 
+function buildFnActionConfig(actions, isAction) {
+  // Assert actions to be dictionary
+  let fnMap = new IdDict()
+  for (const actionMethod in actions) {
+    const fn = actions[actionMethod]
+    invariant(isAction(fn), `Action method '${actionMethod}' must be an action. Receive ${fn}`)
+
+    fnMap.put(fn, [])
+  }
+
+  return fnMap
+}
+
 
 function buildFnMap(config, isAction, state) {
   let fnMap = new IdDict()
@@ -34,11 +47,14 @@ function buildFnMap(config, isAction, state) {
     let [action, initState] = config
     state = initState
 
-    const [tmpMap, _] = buildFnMap(action, isAction)
-    for (const fn of tmpMap.keys()) {
-      invariant(!fnMap.has(fn), `Could not map action as had another action with the same function: ${fn}`)
-      fnMap.put(fn, tmpMap.get(fn))
-    }
+    const tmpMap = buildFnActionConfig(action, isAction)
+    fnMap.update(tmpMap)
+
+//    const [tmpMap, _] = buildFnMap(action, isAction)
+//    for (const fn of tmpMap.keys()) {
+//      invariant(!fnMap.has(fn), `Could not map action as had another action with the same function: ${fn}`)
+//      fnMap.put(fn, tmpMap.get(fn))
+//    }
   } else {
     for (const field in config) {
       const childConfig = config[field]
@@ -64,7 +80,7 @@ function buildFnMap(config, isAction, state) {
       } else {
   //      console.log('field', field);
         const [tmpMap, _] = buildFnMap(action, isAction)
-  //      state[field] = tmpRet.state
+
         for (const fn of tmpMap.keys()) {
           invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
           fnMap.put(fn, [field, ...tmpMap.get(fn)])
