@@ -36,10 +36,15 @@ test('ReducerSet should different for two action', () => {
   }
 
   const actions = {
-    loading: loadingActions,
-    errorMessage: errorMessageActions
+    loading: [loadingActions, false],
+    errorMessage: [errorMessageActions, null]
   }
   const store = createStore(actions)
+
+  const initState = store.getState()
+  expect(initState.loading).toBe(false)
+  expect(initState.errorMessage).toBe(null)
+
   store.dispatch(errorMessageActions.setErrorMessage, "API error")
   store.dispatch(loadingActions.setLoading, true)
   store.dispatch(errorMessageActions.setErrorMessage, "API error")
