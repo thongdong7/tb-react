@@ -32,7 +32,7 @@ const App = ({todos=[], loading, loadData, addTodo, changeVisibility, toggleTodo
   )
 }
 
-const mapStateToProps = ({todos, visibilityFilter, loading}) => {
+const mapStateToProps = ({todos=[], visibilityFilter, loading}) => {
   let retTodos
   if (visibilityFilter === 'SHOW_COMPLETED') {
     retTodos = todos.filter(t => t.completed)

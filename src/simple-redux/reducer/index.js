@@ -1,5 +1,5 @@
 export * from './list'
 
-export function ReducerSet(item) {
-  return state => item
+export function ReducerSet() {
+  return item => state => item
 }

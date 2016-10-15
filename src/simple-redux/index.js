@@ -1,5 +1,7 @@
-import Store from './store'
+import createStore from './store'
 export * from './middleware'
 export * from './reducer'
+import IdDict from './iddict'
 
-export default Store
+export {IdDict}
+export default createStore

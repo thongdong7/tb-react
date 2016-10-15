@@ -15,14 +15,18 @@ function getAsyncFunction(data) {
   return data.async
 }
 
-export function middlewareAsyncAction(dispatch, fn, ...args) {
-//  console.log('async middle ware');
-  if (isAsyncAction(fn)) {
-//    console.log('process async action');
-//      console.log('is async', fn);
+class MiddlewareAsyncAction {
+  couldHandle(action) {
+    return isAsyncAction(action)
+  }
+
+  apply(dispatch, fn, ...args) {
+//    console.log('async apply', fn);
     fn = getAsyncFunction(fn)
     fn(dispatch)(...args)
 
     throw new StopDispatchException()
   }
 }
+
+export const middlewareAsyncAction = new MiddlewareAsyncAction()

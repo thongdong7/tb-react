@@ -15,14 +15,6 @@ const todoActions = {
         }
       })
   ]),
-//  load: AsyncAction((name) => {
-//    dispatch => {
-//      dispatch('loading action')
-//      fetch('url'+name).then(response => {
-//        dispatch('success action', response.json())
-//      })
-//    }
-//  }
 }
 
 const visibilityFilterActions = {

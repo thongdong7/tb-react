@@ -1,4 +1,6 @@
 import {StopDispatchException} from './error'
+import IdDict from './iddict'
+
 import isPlainObject from 'lodash/isPlainObject'
 import invariant from 'invariant'
 
@@ -24,40 +26,60 @@ function isActionObject(action) {
   return action._action === true
 }
 
-function buildFnMap(actions) {
-  let ret = {}
+function getActionName(action) {
+  return action._name || action.name || action
+}
 
-  if (actions._action) {
-    // Action object
-
-  }
+function buildFnMap(actions, isAction) {
+  let ret = new IdDict()
 
   for (const field in actions) {
     const action = actions[field]
-//    console.log('field', field);
-    if (typeof action === 'function') {
-      ret[action] = []
-    } else if (isPlainObject(action)) {
-      if (isActionObject(action)) {
-//        console.log('action object', field);
-        ret[action] = []
-      } else {
-//        console.log('buildFnMap', field, action);
-        const tmpMap = buildFnMap(action)
-        for (const fn in tmpMap) {
-          ret[fn] = [field, ...tmpMap[fn]]
-        }
-      }
+//    console.log('field', field, action);
+
+    if (isAction(action)) {
+//      console.log('found actions', action);
+      ret.put(action, [])
     } else {
-      console.log('action is not plain object', field, action);
+      const tmpMap = buildFnMap(action, isAction)
+      for (const fn of tmpMap.keys()) {
+        invariant(!ret.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
+        ret.put(fn, [field, ...tmpMap.get(fn)])
+      }
     }
+//    continue
+//    if (typeof action === 'function') {
+//      invariant(ret[action] === undefined, 'Could not map action for field ${field} as had another action with the same function')
+//      ret[action] = []
+//    } else if (isPlainObject(action)) {
+//      if (isActionObject(action)) {
+////        console.log('action object', field);
+//        ret[action] = []
+//      } else {
+////        console.log('buildFnMap', field, action);
+//        const tmpMap = buildFnMap(action)
+//        for (const fn in tmpMap) {
+//          invariant(ret[fn] === undefined, `Could not map action for field ${field} as had another action with the same function: ${fn}`)
+//          ret[fn] = [field, ...tmpMap[fn]]
+//        }
+//      }
+//    } else {
+//      console.log('action is not plain object', field, action);
+//    }
   }
 
   return ret
 }
 
 export default function createStore(actions, ...middlewares) {
-  const fnMap = buildFnMap(actions)
+  function isAction(action) {
+    const isMiddlewareAction = middlewares.some(m => m.couldHandle(action))
+    return isMiddlewareAction || typeof action === 'function'
+  }
+
+  const fnMap = buildFnMap(actions, isAction)
+//  console.log(fnMap);
+//  return
   let subscribers = []
   let state = undefined
 
@@ -81,7 +103,12 @@ export default function createStore(actions, ...middlewares) {
   }
 
   function findChildState(state, fn) {
-    const paths = fnMap[fn]
+    const paths = fnMap.get(fn)
+    console.log('path', fn, paths);
+    if (!paths) {
+      return state
+    }
+
     for (const field of paths) {
       if (state) {
         state = state[field]
@@ -92,7 +119,7 @@ export default function createStore(actions, ...middlewares) {
 
 
   function updateChildState(state, paths, newChildState) {
-    if (paths.length == 0) {
+    if (!paths || paths.length == 0) {
       return newChildState
     }
 
@@ -114,9 +141,12 @@ export default function createStore(actions, ...middlewares) {
 //      console.log('middleware', middleware);
 //      console.log(dispatch);
 //      console.log(fn);
+      if (!middleware.couldHandle(fn)) {
+        continue
+      }
 
       try {
-        middleware(dispatch, fn, ...args)
+        middleware.apply(dispatch, fn, ...args)
       } catch (e) {
         if (e instanceof StopDispatchException) {
           return
@@ -129,6 +159,7 @@ export default function createStore(actions, ...middlewares) {
     invariant(typeof fn === 'function', 'Could not dispatch a non-function. Ensure that dispatch is called as dispatch(fn, ...args)')
 
     // Get reducers
+//    console.log(fn.name);
     const reducers = fn(...args)
 
     // Find `state child` by fn
@@ -140,12 +171,13 @@ export default function createStore(actions, ...middlewares) {
 //    console.log('new child state', childState);
 
     // Update `state child`
-    state = updateChildState(state, fnMap[fn], childState)
-//    console.log('new state', this.state, this.fnMap[fn]);
+    state = updateChildState(state, fnMap.get(fn), childState)
 
     for (const callback of subscribers) {
+//      console.log('callback', callback, state);
       callback(state)
     }
+//    console.log('dispatch complete');
   }
 
   return {

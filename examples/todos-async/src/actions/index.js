@@ -8,7 +8,7 @@ import {
 let nextTodoId = 0
 
 export const loadingActions = {
-  setLoading: ReducerSet
+  setLoading: ReducerSet()
 }
 
 //console.log(FetchAction);
@@ -51,7 +51,7 @@ export const todoActions = {
 
 export const visibilityFilterActions = {
   // This action only has one reducer
-  setVisibilityFilter: ReducerSet
+  setVisibilityFilter: ReducerSet()
 }
 
 export default {

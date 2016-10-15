@@ -22,25 +22,33 @@ function isFetchAction(data) {
   return data._fetch !== undefined
 }
 
-export function middlewareFetch(dispatch, fn, ...args) {
-  if (isFetchAction(fn)) {
-    const {url, options} = fn._fetch
-//    console.log('fetch action', url, options);
-    if (options.start) {
-      invariant(typeof options.start === 'function', `FetchAction.options.start must be a function. ${typeof options.start} is provided`)
+class MiddlewareFetch {
+  couldHandle(action) {
+    return action._fetch !== undefined
+  }
 
-      options.start(dispatch)
+  apply(dispatch, fn, ...args) {
+    if (isFetchAction(fn)) {
+      const {url, options} = fn._fetch
+  //    console.log('fetch action', url, options);
+      if (options.start) {
+        invariant(typeof options.start === 'function', `FetchAction.options.start must be a function. ${typeof options.start} is provided`)
+
+        options.start(dispatch)
+      }
+
+      fetch(url).then(
+        response => response.json().then(data => {
+  //        console.log('data', data);
+          if (options.success) {
+            options.success(dispatch, data)
+          }
+        })
+      )
+
+      throw new StopDispatchException()
     }
-
-    fetch(url).then(
-      response => response.json().then(data => {
-//        console.log('data', data);
-        if (options.success) {
-          options.success(dispatch, data)
-        }
-      })
-    )
-    
-    throw new StopDispatchException()
   }
 }
+
+export const middlewareFetch = new MiddlewareFetch()
