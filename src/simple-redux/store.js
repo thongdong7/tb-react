@@ -51,13 +51,13 @@ function buildFnMap(config, isAction, state) {
     const tmpMap = buildFnActionConfig(action, isAction)
     fnMap.update(tmpMap)
   } else {
+    if (state == undefined) {
+      state = {}
+    }
     for (const field in config) {
       const childConfig = config[field]
 
       const [tmpMap, initState] = buildFnMap(childConfig, isAction)
-      if (state == undefined) {
-        state = {}
-      }
       state[field] = initState
 //      console.log('tmp map for field', field, tmpMap);
 
