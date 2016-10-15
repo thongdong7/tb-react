@@ -22,13 +22,8 @@ export function executeReducersArray(reducers, state) {
   return state
 }
 
-function isActionObject(action) {
-  return action._action === true
-}
 
-function getActionName(action) {
-  return action._name || action.name || action
-}
+
 
 function buildFnMap(actions, isAction, state) {
 
