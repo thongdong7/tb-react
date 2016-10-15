@@ -22,50 +22,60 @@ export function executeReducersArray(reducers, state) {
   return state
 }
 
-
+function isActionConfig(data) {
+  return data.length === 2
+}
 
 
 function buildFnMap(actions, isAction, state) {
-
   let fnMap = new IdDict()
 
-  for (const field in actions) {
+  if (isActionConfig(actions)) {
+    let [action, initState] = actions
+    state = initState
 
-    if (state == undefined) {
-      state = {}
+    const [tmpMap, _] = buildFnMap(action, isAction)
+    for (const fn of tmpMap.keys()) {
+      invariant(!fnMap.has(fn), `Could not map action as had another action with the same function: ${fn}`)
+      fnMap.put(fn, tmpMap.get(fn))
     }
-    const config = actions[field]
-    let action
-    let initState
-    if (config.length === 2) {
-      [action, initState] = config
-      state[field] = initState
-//      console.log('init field', field, initState);
+  } else {
+    for (const field in actions) {
+      if (state == undefined) {
+        state = {}
+      }
+      const config = actions[field]
+      let action
+      let initState
+      if (config.length === 2) {
+        [action, initState] = config
+        state[field] = initState
+  //      console.log('init field', field, initState);
 
-    } else {
-      action = config
-    }
+      } else {
+        action = config
+      }
 
-    if (isAction(action)) {
-//      console.log('found actions', action);
-      fnMap.put(action, [])
-//      state[field] = undefined
-    } else {
-//      console.log('field', field);
-      const tmpRet = buildFnMap(action, isAction, undefined)
-      const tmpMap = tmpRet.fnMap
-//      state[field] = tmpRet.state
-      for (const fn of tmpMap.keys()) {
-        invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
-        fnMap.put(fn, [field, ...tmpMap.get(fn)])
+      if (isAction(action)) {
+  //      console.log('found actions', action);
+        fnMap.put(action, [])
+  //      state[field] = undefined
+      } else {
+  //      console.log('field', field);
+        const [tmpMap, _] = buildFnMap(action, isAction)
+  //      state[field] = tmpRet.state
+        for (const fn of tmpMap.keys()) {
+          invariant(!fnMap.has(fn), `Could not map action for field ${field} as had another action with the same function: ${fn}`)
+          fnMap.put(fn, [field, ...tmpMap.get(fn)])
+        }
       }
     }
   }
 
-  return {
+  return [
     fnMap,
     state
-  }
+  ]
 }
 
 export default function createStore(actions, ...middlewares) {
@@ -75,8 +85,8 @@ export default function createStore(actions, ...middlewares) {
   }
 
   const mapResult = buildFnMap(actions, isAction, undefined)
-  const fnMap = mapResult.fnMap
-  let state = mapResult.state
+  const fnMap = mapResult[0]
+  let state = mapResult[1]
 //  console.log(fnMap);
 //  return
   let subscribers = []
