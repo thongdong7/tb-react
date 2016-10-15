@@ -150,14 +150,9 @@ export default function createStore(actions, ...middlewares) {
         continue
       }
 
-      try {
-        middleware.apply(dispatch, fn, ...args)
-      } catch (e) {
-        if (e instanceof StopDispatchException) {
-          return
-        }
-
-        throw e
+      const ret = middleware.apply(dispatch, fn, ...args)
+      if (ret instanceof StopDispatchException) {
+        return ret.data
       }
     }
 

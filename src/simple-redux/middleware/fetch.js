@@ -1,4 +1,5 @@
 import invariant from 'invariant'
+import Promise from 'promise'
 
 import {StopDispatchException} from '../error'
 
@@ -37,16 +38,23 @@ class MiddlewareFetch {
         options.start(dispatch)
       }
 
-      fetch(url).then(
-        response => response.json().then(data => {
-  //        console.log('data', data);
-          if (options.success) {
-            options.success(dispatch, data)
-          }
-        })
+      const p = new Promise(
+        (resolve, reject) => {
+          fetch(url).then(
+            response => response.json().then(data => {
+      //        console.log('data', data);
+              if (options.success) {
+                options.success(dispatch, data)
+              }
+
+              resolve(data)
+            })
+          )
+        }
       )
 
-      throw new StopDispatchException()
+
+      return new StopDispatchException(p)
     }
   }
 }

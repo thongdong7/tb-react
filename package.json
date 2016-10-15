@@ -20,11 +20,13 @@
     "chokidar": "^1.6.0",
     "jest": "^16.0.1",
     "react-test-renderer": "^15.3.2",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "whatwg-fetch": "^1.0.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.1.1",
+    "promise": "^7.1.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-modal": "^1.5.2",
@@ -32,6 +34,9 @@
     "toastr": "^2.1.2"
   },
   "jest": {
-    "testPathIgnorePatterns": ["/examples/", "/node_modules/"]
+    "testPathIgnorePatterns": [
+      "/examples/",
+      "/node_modules/"
+    ]
   }
 }

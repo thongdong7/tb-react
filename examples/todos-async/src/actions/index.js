@@ -54,9 +54,22 @@ export const visibilityFilterActions = {
   setVisibilityFilter: ReducerSet()
 }
 
+export const repositoryActions = {
+//  load: FetchAction("https://api.github.com/users", {
+//    start: (dispatch) => dispatch(loadingActions.setLoading, true),
+//    success: (dispatch, data) => {
+//      const texts = data.map(item => item.login)
+//      dispatch(todoActions.addTodos, texts)
+//      dispatch(loadingActions.setLoading, false)
+//    },
+//    error: (dispatch) => {},
+//  })
+}
+
 export default {
   // Combine actions
   todos: [todoActions, []],
   visibilityFilter: [visibilityFilterActions, 'SHOW_ALL'],
-  loading: [loadingActions, false]
+  loading: [loadingActions, false],
+  repositories: [repositoryActions, []],
 }

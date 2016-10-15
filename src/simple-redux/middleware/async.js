@@ -25,7 +25,7 @@ class MiddlewareAsyncAction {
     fn = getAsyncFunction(fn)
     fn(dispatch)(...args)
 
-    throw new StopDispatchException()
+    return new StopDispatchException()
   }
 }
 
