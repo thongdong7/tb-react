@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
 export function createStoreMap({dispatch, subscribe, getState}, options={}) {
+  let optionsProps = options.props || {}
   let currentProps = _transferState(getState())
   let unsubscribe
 
@@ -38,7 +39,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   function start() {
     unsubscribe = subscribe(_onStateChange)
     if (typeof options.start === 'function') {
-      options.start(dispatch)
+      options.start(dispatch, optionsProps)
     }
   }
 

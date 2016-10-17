@@ -8,7 +8,7 @@ import {FetchAction} from '../../../lib/simple-redux'
 import {map, get, get2} from '../../../lib'
 import {siteActions, repositoryActions} from './actions'
 
-const App = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
+const _RepositoryList = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
   return (
     <div className="App">
       auto load repositories {loading && "loading..."}
@@ -31,6 +31,10 @@ const App = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
   )
 }
 
+const App = () => (
+  <RepositoryList user="thongdong7" />
+)
+
 const mapStateToProps = ({repositories, loading}) => {
   return {
     repositories,
@@ -44,14 +48,16 @@ const mapDispatchToProps = (dispatch) => {
  }
 }
 
-export default connect2({
-  start: (dispatch) => {
-    console.log('app is started')
-    dispatch(repositoryActions.load, 'thongdong7')
+const RepositoryList = connect2({
+  start: (dispatch, {user}) => {
+    console.log('app is started', user)
+    dispatch(repositoryActions.load, user)
   },
   stateToProps: mapStateToProps,
   dispatchToProps: mapDispatchToProps
-})(App)
+})(_RepositoryList)
+
+export default App
 
 class SiteList extends Component {
   render() {

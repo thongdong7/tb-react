@@ -9,7 +9,6 @@ export const connect2 = (options={}) => (Comp) => {
   class Connect extends Component {
     constructor(props, context) {
       super(props, context)
-  //    this.version = version
       this.store = props.store || context.store
 
       invariant(this.store,
@@ -19,6 +18,7 @@ export const connect2 = (options={}) => (Comp) => {
 
       this.storeMap = createStoreMap(this.store, {
         ...options,
+        props,
         propsChange: this.onPropsChange
       })
 
@@ -36,7 +36,7 @@ export const connect2 = (options={}) => (Comp) => {
     }
 
     onPropsChange = (nextProps) => {
-      console.log('props change', nextProps);
+      // console.log('props change', nextProps);
       this.setState(nextProps)
     }
 
