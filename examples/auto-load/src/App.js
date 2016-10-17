@@ -8,12 +8,11 @@ import {FetchAction} from '../../../lib/simple-redux'
 import {map, get, get2} from '../../../lib'
 import {siteActions, repositoryActions} from './actions'
 
-const _RepositoryList = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
+const _RepositoryList = ({repositories, loading, loadData}) => {
   return (
     <div className="App">
       auto load repositories {loading && "loading..."}
-      <button onClick={loadData}>loadData</button>
-      <button onClick={addTodo}>Add</button>
+      <button onClick={loadData}>Refresh</button>
       <ul>
         {repositories.map((t, idx) => {
           return (
@@ -22,7 +21,6 @@ const _RepositoryList = ({repositories, loading, loadData, addTodo, toggleTodo})
               style={{
                 textDecoration: t.completed ? 'line-through' : 'none'
               }}
-              onClick={() => toggleTodo(t.id)}
             >{t.id} {t.text}</li>
           )
         })}
