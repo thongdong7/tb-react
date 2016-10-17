@@ -12,12 +12,12 @@ export function FetchAction(fn) {
 }
 
 function isFetchAction(data) {
-  return data._action === true && typeof data._fetch === 'function'
+  return data && data._action === true && typeof data._fetch === 'function'
 }
 
 class MiddlewareFetch {
   couldHandle(action) {
-    return action._fetch !== undefined
+    return action && action._fetch !== undefined
   }
 
   apply(dispatch, action, ...args) {

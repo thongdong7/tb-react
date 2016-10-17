@@ -1,6 +1,6 @@
 class MiddlewareLog {
   couldHandle(action) {
-    return typeof action === 'function' || action._name
+    return typeof action === 'function' || (action && action._name)
   }
 
   apply(dispatch, fn, ...args) {

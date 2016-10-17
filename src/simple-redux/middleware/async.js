@@ -8,7 +8,7 @@ export function AsyncAction(fn) {
 }
 
 function isAsyncAction(data) {
-  return data.async !== undefined
+  return data && data.async !== undefined
 }
 
 function getAsyncFunction(data) {

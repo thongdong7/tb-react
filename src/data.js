@@ -1,5 +1,7 @@
 // @flow
 import React, {Component} from 'react'
+import invariant from 'invariant'
+import storeShape from './simple-react-redux/utils/storeShape'
 
 /**
  * Load data from url
@@ -99,8 +101,15 @@ export function map(...mappers) {
   return (Comp) => {
     // console.log('comp', url, params);
     class LoadComp extends Component {
-      constructor(props) {
-        super(props)
+      constructor(props, context) {
+        super(props, context)
+
+        this.store = props.store || context.store
+
+        invariant(this.store,
+          `Could not find "store" in either the context or ` +
+          `props`
+        )
 
         // Call mappers to build init state
 //        console.log('Call mappers to build init state')
@@ -140,7 +149,7 @@ export function map(...mappers) {
         let data = {...nextProps}
         for (const mapper of mappers) {
           if (mapper.propsChange) {
-            data = await mapper.propsChange(data, force)
+            data = await mapper.propsChange(data, {force, dispatch: this.store.dispatch})
           }
         }
 
@@ -164,6 +173,13 @@ export function map(...mappers) {
           <Comp {...this.props} {...this.state} refresh={this.refresh} />
         )
       }
+    }
+
+    LoadComp.contextTypes = {
+      store: storeShape
+    }
+    LoadComp.propTypes = {
+      store: storeShape
     }
 
     return LoadComp
