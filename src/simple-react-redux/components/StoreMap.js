@@ -4,6 +4,9 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   let currentProps = _transferState(getState())
   let unsubscribe
 
+  /**
+   * Transfer state to props
+   */
   function _transferState(state) {
     const nextStateProps = options.stateToProps ? options.stateToProps(state, options.props) : {}
     const nextDispatchProps = options.dispatchToProps ? options.dispatchToProps(dispatch) : {}
@@ -14,15 +17,16 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     }
   }
 
-  function _isPropsDifferent(props1, props2) {
-    return !_.isEqual(props1, props2)
-  }
-
+  /**
+   * When state is changed:
+   *  1. transfer state to props
+   *  2. If props is changed, update currentProps and notify this change
+   */
   function _onStateChange(state) {
     // console.log('state changed', state);
 
     const newProps = _transferState(state)
-    if (_isPropsDifferent(currentProps, newProps)) {
+    if (!_.isEqual(currentProps, newProps)) {
       currentProps = newProps
       options.propsChange(currentProps)
     }
@@ -38,7 +42,9 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     }
   }
 
-  // Call when `componentWillUnMount()`
+  /**
+   * Call when `componentWillUnMount()`
+   */
   function stop() {
     if (unsubscribe) {
       // console.log('unsubcribe');
