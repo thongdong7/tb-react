@@ -1,60 +1,11 @@
 import createStore, {middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
+import {createStoreMap} from '../../src/simple-react-redux'
 
 // function
 
-function createStoreMap({dispatch, subscribe, getState}, options={}) {
-  let currentProps = _transferState(getState())
-  let unsubscribe
 
-  function _transferState(state) {
-    const stateProps = options.stateToProps ? options.stateToProps(state, options.props) : {}
-    const dispatchProps = options.dispatchToProps ? options.dispatchToProps(dispatch) : {}
-    return {
-      ...stateProps,
-      ...dispatchProps,
-    }
-  }
 
-  function _isPropsDifferent(props1, props2) {
-    return true
-  }
-
-  function _onStateChange(state) {
-    // console.log('store changed', state);
-
-    const newProps = _transferState(state)
-    if (_isPropsDifferent(currentProps, newProps)) {
-      currentProps = newProps
-      options.propsChange(currentProps)
-    }
-  }
-
-  /**
-   * Call when `componentWillMount()`
-   */
-  function start() {
-    unsubscribe = subscribe(_onStateChange)
-    if (typeof options.start === 'function') {
-      options.start(dispatch)
-    }
-  }
-
-  // Call when `componentWillUnMount()`
-  function stop() {
-    if (unsubscribe) {
-      // console.log('unsubcribe');
-      unsubscribe()
-    }
-  }
-
-  return {
-    start,
-    stop,
-    getProps: () => currentProps
-  }
-}
-
-test("Props change when store changed", () => {
+test("Props change when state changed", () => {
   let nextTodoId = 0
   const todoActions = {
     addTodo: (text) => ([
@@ -89,20 +40,24 @@ test("Props change when store changed", () => {
     stateToProps: (state, ownProps) => ({todos: state.todos.filter(t => !t.completed)}),
     propsChange: (props) => {
       // console.log('props change', props);
-      propsChangeCount++
+      propsChangeCount += 1
     }
   })
 
   // Current props is empty
   expect(storeMap.getProps()).toEqual({todos: []});
+  expect(propsChangeCount).toBe(0)
+
+  // Start
+  storeMap.start()
+  expect(propsChangeCount).toBe(1)
+
+  store.dispatch(visibilityFilterActions.setVisibilityFilter, 'SHOW_ACTIVE')
+  expect(propsChangeCount).toBe(1)
 
   function getTodos() {
     return storeMap.getProps().todos
   }
-
-  expect(getTodos()).toEqual([])
-
-  storeMap.start()
 
   // console.log('get todos', getTodos());
 
