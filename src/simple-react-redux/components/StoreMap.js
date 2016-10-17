@@ -7,7 +7,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   function _transferState(state) {
     const nextStateProps = options.stateToProps ? options.stateToProps(state, options.props) : {}
     const nextDispatchProps = options.dispatchToProps ? options.dispatchToProps(dispatch) : {}
-    
+
     return {
       ...nextStateProps,
       ...nextDispatchProps,
@@ -15,12 +15,11 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   }
 
   function _isPropsDifferent(props1, props2) {
-    // console.log('isDifferent', !shallowEqual(props1, props2), props1, props2);
     return !_.isEqual(props1, props2)
   }
 
   function _onStateChange(state) {
-    // console.log('store changed', state);
+    // console.log('state changed', state);
 
     const newProps = _transferState(state)
     if (_isPropsDifferent(currentProps, newProps)) {
