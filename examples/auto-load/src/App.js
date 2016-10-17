@@ -3,10 +3,10 @@ import React, {Component} from 'react';
 
 //styles
 
-import {connect} from '../../../lib/simple-react-redux'
+import {connect, connect2} from '../../../lib/simple-react-redux'
 import {FetchAction} from '../../../lib/simple-redux'
 import {map, get, get2} from '../../../lib'
-import {siteActions} from './actions'
+import {siteActions, repositoryActions} from './actions'
 
 const App = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
   return (
@@ -31,8 +31,6 @@ const App = ({repositories, loading, loadData, addTodo, toggleTodo}) => {
   )
 }
 
-
-
 const mapStateToProps = ({repositories, loading}) => {
   return {
     repositories,
@@ -40,16 +38,20 @@ const mapStateToProps = ({repositories, loading}) => {
   }
 }
 
-//const mapDispatchToProps = (dispatch) => {
-//  return {
-//    addTodo: () => dispatch(todoActions.addTodo, "Hello"),
-//    toggleTodo: (id) => dispatch(todoActions.toggleTodo, id),
-//    changeVisibility: (filter) => dispatch(visibilityFilterActions.setVisibilityFilter, filter),
-//    loadData: () => dispatch(repositoryActions.load, 'octocat')
-//  }
-//}
+const mapDispatchToProps = (dispatch) => {
+ return {
+   loadData: () => dispatch(repositoryActions.load, 'octocat')
+ }
+}
 
-//export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect2({
+  start: (dispatch) => {
+    console.log('app is started')
+    dispatch(repositoryActions.load, 'thongdong7')
+  },
+  stateToProps: mapStateToProps,
+  dispatchToProps: mapDispatchToProps
+})(App)
 
 class SiteList extends Component {
   render() {
@@ -74,6 +76,6 @@ class SiteList extends Component {
 //          })}
 
 
-export default map(
-  get2(siteActions.load),
-)(SiteList)
+// export default map(
+//   get2(siteActions.load),
+// )(SiteList)
