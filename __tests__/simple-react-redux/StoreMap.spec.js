@@ -1,10 +1,6 @@
 import createStore, {middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
 import {createStoreMap} from '../../src/simple-react-redux'
 
-// function
-
-
-
 test("Props change when state changed", () => {
   let nextTodoId = 0
   const todoActions = {
