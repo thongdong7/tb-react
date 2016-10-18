@@ -33,7 +33,7 @@ test("Props change when state changed", () => {
   let propsChangeCount = 0
   const storeMap = createStoreMap(store, {
     start: (dispatch) => dispatch(todoActions.load),
-    stateToProps: (state, ownProps) => ({todos: state.todos.filter(t => !t.completed)}),
+    props: (state, ownProps) => ({todos: state.todos.filter(t => !t.completed)}),
     propsChange: (props) => {
       // console.log('props change', props);
       propsChangeCount += 1

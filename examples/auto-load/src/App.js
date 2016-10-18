@@ -75,8 +75,8 @@ const RepositoryList = connect2({
     console.log('app is started', user)
     dispatch(repositoryActions.load, user)
   },
-  stateToProps: mapStateToProps,
-  dispatchToProps: mapDispatchToProps
+  props: mapStateToProps,
+  event: mapDispatchToProps
 })(_RepositoryList)
 
 export default App
