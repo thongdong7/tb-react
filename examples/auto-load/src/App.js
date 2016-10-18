@@ -29,9 +29,33 @@ const _RepositoryList = ({repositories, loading, loadData}) => {
   )
 }
 
-const App = () => (
-  <RepositoryList user="thongdong7" />
-)
+class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      user: "thongdong7",
+    }
+  }
+
+  toggle = () => {
+    if (this.state.user == "thongdong7") {
+      this.setState({user: "facebook"})
+    } else {
+      this.setState({user: "thongdong7"})
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.user}
+        <button onClick={this.toggle}>Toggle</button>
+        <RepositoryList user={this.state.user} />
+      </div>
+    )
+  }
+}
 
 const mapStateToProps = ({repositories, loading}) => {
   return {

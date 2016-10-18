@@ -44,9 +44,10 @@ export const repositoryActions = {
     error: (dispatch) => {},
   })),
   adds: (texts) => {
-    const items = texts.map((text, i) => ({id: nextTodoId + i, text, completed: false}))
+    const items = texts.map((text, i) => ({id: i, text, completed: false}))
     nextTodoId += items.length
-    return ReducerListConcat(items)
+    // return ReducerListConcat(items)
+    return state => items
   },
 }
 

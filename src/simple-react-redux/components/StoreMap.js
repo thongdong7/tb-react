@@ -36,8 +36,15 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   /**
    * Call when `componentWillMount()`
    */
-  function start() {
-    unsubscribe = subscribe(_onStateChange)
+  function start(props) {
+    if (props !== undefined) {
+      optionsProps = props
+    }
+
+    if (!unsubscribe) {
+      unsubscribe = subscribe(_onStateChange)
+    }
+
     if (typeof options.start === 'function') {
       options.start(dispatch, optionsProps)
     }

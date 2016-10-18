@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import storeShape from '../utils/storeShape'
 import {createStoreMap} from './StoreMap'
 import invariant from 'invariant'
+import _ from 'lodash'
 
 const emptyProps = (state) => ({})
 
@@ -26,13 +27,20 @@ export const connect2 = (options={}) => (Comp) => {
     }
 
     componentWillMount() {
-//      console.log('subscribe', this.store);
-      this.storeMap.start()
+    //  console.log('subscribe', this.store);
+      this.storeMap.start(this.props)
     }
 
     componentWillUnmount() {
       console.log('unsubscribe');
       this.storeMap.stop()
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (!_.isEqual(this.props, nextProps)) {
+        // console.log('props change', this.props, nextProps);
+        this.storeMap.start(nextProps)
+      }
     }
 
     onPropsChange = (nextProps) => {
