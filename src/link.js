@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router'
+export * from './simple-react-redux'
+export * from './simple-redux'
 
 export class NavLink extends Component {
   static contextTypes = {

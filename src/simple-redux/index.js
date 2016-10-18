@@ -3,5 +3,5 @@ export * from './middleware'
 export * from './reducer'
 import IdDict from './iddict'
 
-export {IdDict}
+export {IdDict, createStore}
 export default createStore
