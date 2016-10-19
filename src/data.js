@@ -11,14 +11,18 @@ import storeShape from './simple-react-redux/utils/storeShape'
  */
 export async function loadData(url, params: Object) {
   // console.log(url, params);
-  const queryString = objectToQuerystring(params)
-  const requestUrl = url + (queryString ? "?" + queryString : "")
+  const requestUrl = buildUrl(url, params)
 //  const response = await fetch(requestUrl, params)
 //   console.log(requestUrl);
   const response = await fetch(requestUrl, params)
   return response.json()
 }
 
+
+export function buildUrl(url, params) {
+  const queryString = objectToQuerystring(params)
+  return url + (queryString ? "?" + queryString : "")
+}
 /**
  * Convert object to query string
  *
