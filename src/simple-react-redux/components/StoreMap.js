@@ -37,6 +37,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
    * Call when `componentWillMount()`
    */
   function start(props) {
+    // console.log('start');
     if (props !== undefined) {
       optionsProps = props
     }
@@ -60,9 +61,21 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     }
   }
 
+  /**
+   * Trigger event state change to check if 
+   * the currentProps is changed.
+   * 
+   * In case currentProps is changed, `options.propChange`
+   * will be called
+   */
+  function checkPropsChange() {
+    _onStateChange(getState())
+  }
+
   return {
     start,
     stop,
-    getProps: () => currentProps
+    getProps: () => currentProps,
+    checkPropsChange
   }
 }

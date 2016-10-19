@@ -42,6 +42,8 @@ export const connect2 = (options={}) => (Comp) => {
       if (!isSameParams(this.props, nextProps)) {
         // console.log('props change', this.props, nextProps);
         this.storeMap.start(nextProps)
+
+        this.storeMap.checkPropsChange()
       }
     }
 
