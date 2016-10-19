@@ -7,7 +7,7 @@ import {isSameParams} from '../../data'
 
 const emptyProps = (state) => ({})
 
-export const connect2 = (options={}) => (Comp) => {
+export const connect2 = (options={}, ...transformers) => (Comp) => {
   class Connect extends Component {
     constructor(props, context) {
       super(props, context)
@@ -21,7 +21,8 @@ export const connect2 = (options={}) => (Comp) => {
       this.storeMap = createStoreMap(this.store, {
         ...options,
         ownProps: props,
-        propsChange: this.onPropsChange
+        propsChange: this.onPropsChange,
+        transformers
       })
 
       this.state = this.storeMap.getProps()
@@ -55,7 +56,7 @@ export const connect2 = (options={}) => (Comp) => {
     render() {
 //      console.log('connect props', this.props);
       return (
-        <Comp {...this.state} dispatch={this.store.dispatch} />
+        <Comp {...this.props} {...this.state} dispatch={this.store.dispatch} />
       )
     }
   }

@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
 export function createStoreMap({dispatch, subscribe, getState}, options={}) {
+  const {transformers=[]} = options
   let optionsProps = options.ownProps || {}
   let currentProps = _transferState(getState())
   let unsubscribe
@@ -12,10 +13,16 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     const nextStateProps = options.props ? options.props(state, optionsProps) : {}
     const nextDispatchProps = options.event ? options.event(dispatch) : {}
 
-    return {
+    let ret = {
       ...nextStateProps,
       ...nextDispatchProps,
     }
+
+    for (const transformer of transformers) {
+      ret = transformer.transfer(ret)
+    }
+
+    return ret
   }
 
   /**
@@ -62,9 +69,9 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
   }
 
   /**
-   * Trigger event state change to check if 
+   * Trigger event state change to check if
    * the currentProps is changed.
-   * 
+   *
    * In case currentProps is changed, `options.propChange`
    * will be called
    */

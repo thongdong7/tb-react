@@ -25,7 +25,7 @@ class MiddlewareAPI {
   apply(dispatch, action, ...args) {
     if (isFetchAction(action)) {
       const fn = action._api
-      const {url, success, start} = fn(...args)
+      const {url, params={}, success, start} = fn(...args)
   //    console.log('fetch action', url, options);
       if (start) {
         invariant(typeof start === 'function', `APIAction.options.start must be a function. ${typeof start} is provided`)
@@ -33,7 +33,7 @@ class MiddlewareAPI {
         start(dispatch)
       }
 
-      const requestUrl = api.host + buildUrl(url, {})
+      const requestUrl = api.host + buildUrl(url, params)
 
       const p = new Promise(
         (resolve, reject) => {

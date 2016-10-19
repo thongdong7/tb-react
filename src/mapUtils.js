@@ -165,3 +165,44 @@ export function _form(_api, formBuilder) {
 }
 
 export const form = _form.bind(undefined, api)
+
+export function _form2(_api, formBuilder) {
+  return {
+    transfer: (props) => {
+      const config = formBuilder(props)
+      if (!config) {
+        // No config
+        return props
+      }
+
+      const {
+        url,
+        name="form",
+        fields=[],
+        data={},
+
+        // Form options
+        complete,
+        schema,
+        editable=false
+      } = config
+
+      const submit = _buildFormSubmit(_api, url)(props)
+
+      return {
+        ...props,
+        [name]: new Form(
+          {...selectProps(props, fields), ...data},
+          submit,
+          {
+            schema,
+            complete,
+            editable
+          }
+        )
+      }
+    }
+  }
+}
+
+export const form2 = _form.bind(undefined, api)
