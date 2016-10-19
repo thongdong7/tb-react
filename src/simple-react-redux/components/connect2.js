@@ -3,6 +3,7 @@ import storeShape from '../utils/storeShape'
 import {createStoreMap} from './StoreMap'
 import invariant from 'invariant'
 import _ from 'lodash'
+import {isSameParams} from '../../data'
 
 const emptyProps = (state) => ({})
 
@@ -37,7 +38,8 @@ export const connect2 = (options={}) => (Comp) => {
     }
 
     componentWillReceiveProps(nextProps) {
-      if (!_.isEqual(this.props, nextProps)) {
+      // if (!_.isEqual(this.props, nextProps)) {
+      if (!isSameParams(this.props, nextProps)) {
         // console.log('props change', this.props, nextProps);
         this.storeMap.start(nextProps)
       }

@@ -31,7 +31,7 @@ function buildFnActionConfig(actions, isAction) {
   let fnMap = new IdDict()
   for (const actionMethod in actions) {
     const fn = actions[actionMethod]
-    invariant(isAction(fn), `Action method '${actionMethod}' must be an action. Receive ${fn}`)
+    invariant(isAction(fn), `Action method '${actionMethod}' must be an action. Receive ${fn}. If this action is correct. Maybe you lacked the middleware to handle this action`)
 
     fnMap.put(fn, [])
   }

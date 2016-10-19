@@ -9,7 +9,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
    * Transfer state to props
    */
   function _transferState(state) {
-    const nextStateProps = options.props ? options.props(state, options.ownProps) : {}
+    const nextStateProps = options.props ? options.props(state, optionsProps) : {}
     const nextDispatchProps = options.event ? options.event(dispatch) : {}
 
     return {
