@@ -46,7 +46,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     }
 
     if (typeof options.start === 'function') {
-      options.start(dispatch, optionsProps)
+      options.start(dispatch, optionsProps, getState())
     }
   }
 

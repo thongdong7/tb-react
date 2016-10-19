@@ -61,7 +61,7 @@ export function isSameParams(params, lastParams) {
 //      console.log('location', pathname, pathnameLast);
 
       if (pathname !== pathnameLast) {
-//        console.log('location change', pathname, pathnameLast);
+      //  console.log('location change', pathname, pathnameLast);
         return false
       }
     } else if (params[f1] !== lastParams[f1]) {
