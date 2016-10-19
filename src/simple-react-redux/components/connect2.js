@@ -19,7 +19,7 @@ export const connect2 = (options={}) => (Comp) => {
 
       this.storeMap = createStoreMap(this.store, {
         ...options,
-        props,
+        ownProps: props,
         propsChange: this.onPropsChange
       })
 

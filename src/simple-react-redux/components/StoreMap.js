@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 export function createStoreMap({dispatch, subscribe, getState}, options={}) {
-  let optionsProps = options.props || {}
+  let optionsProps = options.ownProps || {}
   let currentProps = _transferState(getState())
   let unsubscribe
 
@@ -9,7 +9,7 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
    * Transfer state to props
    */
   function _transferState(state) {
-    const nextStateProps = options.props ? options.props(state, options.props) : {}
+    const nextStateProps = options.props ? options.props(state, options.ownProps) : {}
     const nextDispatchProps = options.event ? options.event(dispatch) : {}
 
     return {
