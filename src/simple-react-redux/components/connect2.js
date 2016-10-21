@@ -34,7 +34,7 @@ export const connect2 = (options={}, ...transformers) => (Comp) => {
     }
 
     componentWillUnmount() {
-      console.log('unsubscribe');
+      // console.log('unsubscribe');
       this.storeMap.stop()
     }
 
