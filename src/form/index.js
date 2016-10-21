@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Button} from '../button'
 
 import EditableField from './editable'
@@ -94,3 +94,7 @@ export default class Form {
     )
   }
 }
+
+export const PropTypeForm = PropTypes.shape({
+  renderField: PropTypes.func.isRequired,
+})
