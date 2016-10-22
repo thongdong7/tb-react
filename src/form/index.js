@@ -23,7 +23,7 @@ export default class Form {
       this.oldData = {...this.data}
 
       if (this.complete) {
-        return this.complete(ret)
+        return this.complete(ret, this.data)
       }
     }
   }

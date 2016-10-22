@@ -125,7 +125,7 @@ export class ModalButton extends Component {
     if (!buttonParams.type) {
       buttonParams.type = "info"
     }
-    
+
     return (
       <span>
         <Button

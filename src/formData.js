@@ -8,14 +8,17 @@ import api from './api'
 
 export class RemoteButton extends Component {
   submit = async () => {
-//    console.log('submit to', this.props.url, this.props.params);
-    // TODO get api from props if any
-    const data = await api.load(this.props.url, this.props.params)
+//    console.log('submit to', url, params);
+    const {url, params, onComplete} = this.props
 
-    if (this.props.onComplete) {
-      this.props.onComplete(data)
+    // TODO get api from props if any
+    const data = await api.load(url, params)
+
+    if (onComplete) {
+      onComplete(data, params)
     }
   }
+
   render() {
     return (
       <Button {...selectProps(this.props, ['name', 'icon', 'type', 'hideName'])} onClick={this.submit} />
