@@ -28,6 +28,10 @@ export default class Form {
     }
   }
 
+  onFieldSubmit = () => {
+    console.log('onFieldSubmit');
+  }
+
   submitField = (field) => {
     if (this.data[field] !== this.oldData[field]) {
 //      console.log('value changed', this.data[field], this.oldData[field]);
@@ -46,7 +50,7 @@ export default class Form {
   renderForm = (fields) => {
     return (
       <div className="form-horizontal">
-        {fields.map(field => this.renderFieldRow(field))}
+        {fields.map((field, i) => this.renderFieldRow(field, i))}
         <div className="form-group">
           <div className="col-sm-offset-4 col-sm-8">
             {this.renderSubmit()}
@@ -56,33 +60,35 @@ export default class Form {
     )
   }
 
-  renderField = (field, props={}) => {
+  renderField = (field, props={}, index) => {
     if (this.editable) {
       return (
         <EditableField form={this} field={field} />
       )
     } else {
-      return this.renderFieldInput(field, props)
+      return this.renderFieldInput(field, props, index)
     }
   }
 
-  renderFieldInput = (field, props={}) => {
+  renderFieldInput = (field, props={}, index) => {
+    console.log('index', field, index);
     return (
       <FormInput
         name={field}
         form={this.data}
-        onSubmit={this.submit}
+        onSubmit={this.onFieldSubmit}
+        focus={index === 0}
         {...props}
       />
     )
   }
 
-  renderFieldRow = (field) => {
+  renderFieldRow = (field, index) => {
     return (
       <div key={field} className="form-group">
         <label htmlFor={`form_${field}`} className="col-sm-4 control-label">{this.getFieldTitle(field)}</label>
         <div className="col-sm-8">
-          {this.renderField(field)}
+          {this.renderField(field, {}, index)}
         </div>
       </div>
     )

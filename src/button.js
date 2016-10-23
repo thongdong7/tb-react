@@ -81,7 +81,7 @@ export class ModalButton extends Component {
     comp: PropTypes.oneOfType([
       PropTypes.func.isRequired,
       PropTypes.element.isRequired,
-    ]),
+    ]).isRequired,
     params: PropTypes.object,
     title: PropTypes.string,
     // Callback when modal is closed
@@ -120,7 +120,7 @@ export class ModalButton extends Component {
   render() {
     // console.log('comp props', this.props.comp)
 
-    const {title, params} = this.props
+    const {title=this.props.name, params} = this.props
     let buttonParams = selectProps(this.props, ['icon', 'name', 'type', 'hideName'])
     if (!buttonParams.type) {
       buttonParams.type = "info"

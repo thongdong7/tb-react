@@ -22,6 +22,14 @@ export default class FormInput extends Component {
     this.setState({value: form[name]})
   }
 
+  componentDidMount() {
+    console.log('input mount');
+    // if (this.refs.field && this.props.index === 0) {
+    //   // Auto focus
+    //   this.refs.field.focus()
+    // }
+  }
+
   get value() {
     return this.state.value
   }
@@ -44,6 +52,7 @@ export default class FormInput extends Component {
   render() {
     return (
       <input
+        autoFocus={this.props.focus}
         type="text"
         className="form-control"
         value={cleanValue(this.state.value)}
