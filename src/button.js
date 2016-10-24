@@ -6,7 +6,7 @@ import {selectProps} from './props'
 
 export const Button = ({type="default", icon, name, hideName=false, onClick}) => {
   return (
-    <span className={`btn btn-sm btn-${type}`} onClick={onClick} title={name}>
+    <span className={`btn btn-xs btn-${type}`} onClick={onClick} title={name}>
       {
         icon &&
         <span className={`glyphicon glyphicon-${icon}`} aria-hidden="true"></span>
@@ -25,7 +25,7 @@ Button.propTypes = {
 
 export const LinkButton = ({type="info", icon="link", to, name}) => {
   return (
-    <Link to={to} className={`btn btn-sm btn-${type}`}>
+    <Link to={to} className={`btn btn-xs btn-${type}`}>
       {
         icon &&
         <span className={`glyphicon glyphicon-${icon}`} aria-hidden="true"></span>

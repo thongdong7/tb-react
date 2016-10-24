@@ -24,7 +24,7 @@ export class SchemaFilter extends Component {
     const availableItems = schema.items.filter(({field}) => fields.indexOf(field) < 0)
     const selectField = availableItems.length > 0 ? availableItems[0].field : null
     const value = schema.getDefaultValue(selectField)
-    // console.log(selectField, value)
+    // console.log('field', selectField, 'value', value)
 
     return {
       selectField, value
@@ -59,6 +59,7 @@ export class SchemaFilter extends Component {
         <input
           type="text"
           className="form-control"
+          value={this.state.value}
           onChange={this.changeValue}
           onKeyPress={({key}) => {
             if (key === 'Enter') {
@@ -173,11 +174,12 @@ export class SchemaFilter extends Component {
       <div>
         {this.renderForm()}
 
-        <table className="table table-striped">
+        <table className="table table-striped table-condensed">
           <thead>
             <tr>
               <th>Field</th>
               <th>Value</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -201,6 +203,8 @@ export class SchemaFilter extends Component {
                   <td>{schema.getByField(field).title}</td>
                   <td>
                     {fieldValue}
+                  </td>
+                  <td>
                     <Button
                       name="Remove"
                       icon="remove"
