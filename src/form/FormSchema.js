@@ -11,6 +11,28 @@ export function buildSchema(schema) {
   return schema
 }
 
+export function createSchema(schema) {
+  const schemaMap = buildSchema(schema)
+  return {
+    items: schema,
+    fields: schema.map(i => i.field),
+    titles: schema.map(i => i.title),
+    getByField: (field) => {
+      // console.log(field, schema)
+      return schemaMap[field]
+    },
+    getDefaultValue: (field) => {
+      // console.log(field)
+      switch (schemaMap[field].type) {
+        case 'boolean':
+          return true;
+        default:
+          return ''
+      }
+    }
+  }
+}
+
 export function normalizedFormData(data, schema) {
   let ret = {}
   for (const field of Object.keys(data)) {
