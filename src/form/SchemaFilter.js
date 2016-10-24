@@ -8,23 +8,31 @@ export class SchemaFilter extends Component {
     this.state = this.buildState(props)
   }
 
-  buildState = ({schema, fields}) => {
-    const availableItems = schema.items.filter(({field}) => fields.indexOf(field) < 0)
-    const selectField = availableItems.length > 0 ? availableItems[0].field : null
+  buildState = ({schema}) => {
+    // console.log('selectField', selectField)
     return {
-      availableItems,
-      selectField,
-      value: schema.getDefaultValue(selectField),
+      fields: [],
+      data: {},
+      ...this.buildSelectField({fields: []})
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const nextState = this.buildState(nextProps)
-    // console.log('props change', nextProps.fields, this.state.selectField, nextState)
-    if (nextProps.fields.indexOf(this.state.selectField) >= 0) {
-      // selectField now in ignore fields. We need to refresh selectField
-      this.setState(nextState)
+  buildSelectField = ({fields}) => {
+    const {schema} = this.props
+    // console.log('fields', fields)
+
+    const availableItems = schema.items.filter(({field}) => fields.indexOf(field) < 0)
+    const selectField = availableItems.length > 0 ? availableItems[0].field : null
+    const value = schema.getDefaultValue(selectField)
+    // console.log(selectField, value)
+
+    return {
+      selectField, value
     }
+  }
+
+  availableItems = () => {
+    return this.props.schema.items.filter(({field}) => this.state.fields.indexOf(field) < 0)
   }
 
   changeValue = ({target: {value}}) => {
@@ -64,9 +72,54 @@ export class SchemaFilter extends Component {
   }
 
   add = () => {
-    const {selectField, value} = this.state
+    const {selectField, value, fields, data} = this.state
 
-    this.props.onAdd(selectField, value)
+    const nextState = {}
+    if (fields.indexOf(selectField) < 0) {
+      nextState.fields = [...fields, selectField]
+    } else {
+      nextState.fields = fields
+    }
+
+    nextState.data = {...data, [selectField]: value}
+    // console.log('nextState', nextState)
+
+    this.setState({
+      ...nextState,
+      ...this.buildSelectField(nextState)
+    })
+    // this.props.onAdd(selectField, value)
+  }
+
+  remove = (field) => {
+    const {selectField, value, fields, data} = this.state
+
+    function removeFields(obj, field) {
+      const ret = {}
+      for (const f of Object.keys(obj)) {
+        if (f !== field) {
+          ret[f] = obj[f]
+        }
+      }
+
+      return ret
+    }
+
+    const nextState = {
+      fields: fields.filter(f => f !== field),
+      data: removeFields(data, field)
+    }
+
+    if (selectField) {
+      nextState.selectField = selectField
+      nextState.value = value
+    } else {
+      const tmp = this.buildSelectField(nextState)
+      nextState.selectField = tmp.selectField
+      nextState.value = tmp.value
+    }
+
+    this.setState(nextState)
   }
 
   changeField = ({target: {value: selectField}}) => {
@@ -77,34 +130,44 @@ export class SchemaFilter extends Component {
   }
 
   renderForm = () => {
-    const {availableItems, selectField, value} = this.state
+    const {selectField, value} = this.state
+    const availableItems = this.availableItems()
     if (availableItems.length > 0) {
       return (
         <div className="form-inline">
-          <select
-            onChange={this.changeField}
-            className="form-control"
-          >
-            {availableItems.map(({field, title}) => {
-              return (
-                <option key={field} value={field}>{title}</option>
-              )
-            })}
-          </select>
+          <div className="form-group">
+            <select
+              onChange={this.changeField}
+              className="form-control"
+            >
+              {availableItems.map(({field, title}) => {
+                return (
+                  <option key={field} value={field}>{title}</option>
+                )
+              })}
+            </select>
+          </div>
 
-          {this.renderFieldValue()}
-          <Button
-            name="Add"
-            onClick={this.add}
-          />
+          <div className="form-group">
+            {this.renderFieldValue()}
+          </div>
+          <div className="form-group">
+            <Button
+              name="Add"
+              type="success"
+              icon="plus"
+              hideName
+              onClick={this.add}
+            />
+          </div>
         </div>
       )
     }
   }
 
   render() {
-    const {schema, fields, data, onAdd} = this.props
-    const {availableItems, selectField, value} = this.state
+    const {schema} = this.props
+    const {availableItems, selectField, value, fields, data} = this.state
     // console.log('fields', fields)
     return (
       <div>
@@ -135,9 +198,16 @@ export class SchemaFilter extends Component {
               }
               return (
                 <tr key={field}>
-                  <td>{field}</td>
+                  <td>{schema.getByField(field).title}</td>
                   <td>
                     {fieldValue}
+                    <Button
+                      name="Remove"
+                      icon="remove"
+                      type="danger"
+                      hideName
+                      onClick={() => this.remove(field)}
+                    />
                   </td>
                 </tr>
               )
