@@ -74,8 +74,15 @@ export class SchemaFilter extends Component {
 
   add = () => {
     const {selectField, value, fields, data} = this.state
+    const fieldConfig = this.props.schema.getByField(selectField)
+    if (fieldConfig.type === 'string' && value == '') {
+      this.setState({error: true})
+      return
+    }
 
-    const nextState = {}
+    const nextState = {
+      error: false
+    }
     if (fields.indexOf(selectField) < 0) {
       nextState.fields = [...fields, selectField]
     } else {
@@ -149,7 +156,7 @@ export class SchemaFilter extends Component {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className={`form-group ${this.state.error ? 'has-error' : ''}`}>
             {this.renderFieldValue()}
           </div>
           <div className="form-group">
