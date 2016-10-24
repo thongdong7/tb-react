@@ -34,6 +34,15 @@ export function createSchema(schema) {
         default:
           return ''
       }
+    },
+    isEmptyValue: (field, value) => {
+      const fieldConfig = schemaMap[field]
+      switch (fieldConfig.type) {
+        case 'string':
+          return !value || value.trim() == ""
+        default:
+          return value === undefined || value === null || value === ""
+      }
     }
   }
 }

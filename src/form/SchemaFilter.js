@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Button} from '../button'
+import {inputTypes} from './config'
 
 export class SchemaFilter extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ export class SchemaFilter extends Component {
     } else {
       return (
         <input
-          type="text"
+          type={inputTypes[fieldConfig.type]}
           className="form-control"
           value={this.state.value}
           onChange={this.changeValue}
@@ -74,8 +75,8 @@ export class SchemaFilter extends Component {
 
   add = () => {
     const {selectField, value, fields, data} = this.state
-    const fieldConfig = this.props.schema.getByField(selectField)
-    if (fieldConfig.type === 'string' && value == '') {
+    const {schema} = this.props
+    if (schema.isEmptyValue(selectField, value)) {
       this.setState({error: true})
       return
     }
