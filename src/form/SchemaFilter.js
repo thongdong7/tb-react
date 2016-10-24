@@ -37,7 +37,7 @@ export class SchemaFilter extends Component {
   }
 
   changeValue = ({target: {value}}) => {
-    this.setState({value})
+    this.setState({value: this.props.schema.formatValue(this.state.selectField, value)})
   }
 
   renderFieldValue = () => {
@@ -51,7 +51,7 @@ export class SchemaFilter extends Component {
           defaultValue={schema.getDefaultValue(fieldConfig.field)}
           onChange={this.changeValue}
         >
-          <option value>true</option>
+          <option value={true}>true</option>
           <option value={false}>false</option>
         </select>
       )
@@ -93,11 +93,23 @@ export class SchemaFilter extends Component {
     nextState.data = {...data, [selectField]: value}
     // console.log('nextState', nextState)
 
-    this.setState({
+    this.filterChange({
       ...nextState,
       ...this.buildSelectField(nextState)
     })
     // this.props.onAdd(selectField, value)
+  }
+
+  filterChange = (nextState) => {
+    const {onChange} = this.props
+    if (onChange) {
+      onChange({
+        fields: nextState.fields,
+        data: nextState.data,
+      })
+    }
+
+    this.setState(nextState)
   }
 
   remove = (field) => {
@@ -128,7 +140,7 @@ export class SchemaFilter extends Component {
       nextState.value = tmp.value
     }
 
-    this.setState(nextState)
+    this.filterChange(nextState)
   }
 
   changeField = ({target: {value: selectField}}) => {

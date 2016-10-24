@@ -43,6 +43,17 @@ export function createSchema(schema) {
         default:
           return value === undefined || value === null || value === ""
       }
+    },
+    formatValue: (field, value) => {
+      const fieldConfig = schemaMap[field]
+      switch (fieldConfig.type) {
+        case 'number':
+          return Number(value)
+        case 'boolean':
+          return (value === 'true' || value === true) ? true : false
+        default:
+          return value
+      }
     }
   }
 }
