@@ -23,7 +23,12 @@ export function createSchema(schema) {
     },
     getDefaultValue: (field) => {
       // console.log(field)
-      switch (schemaMap[field].type) {
+      const fieldConfig = schemaMap[field]
+      if (!fieldConfig) {
+        return ''
+      }
+
+      switch (fieldConfig.type) {
         case 'boolean':
           return true;
         default:
