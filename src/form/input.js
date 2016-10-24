@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-
+import {inputTypes} from './config'
 function cleanValue(value) {
   return value ? value : ""
 }
+
 
 export default class FormInput extends Component {
   constructor(props) {
@@ -12,9 +13,6 @@ export default class FormInput extends Component {
     this.state = {
       value
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   componentWillReceiveProps({form, name}) {
@@ -22,25 +20,26 @@ export default class FormInput extends Component {
     this.setState({value: form[name]})
   }
 
-  componentDidMount() {
-    console.log('input mount');
-    // if (this.refs.field && this.props.index === 0) {
-    //   // Auto focus
-    //   this.refs.field.focus()
-    // }
-  }
-
   get value() {
     return this.state.value
   }
 
-  handleChange({target: {value}}) {
-//    console.log('value', value);
+  handleChange = ({target: {checked, value}}) => {
+    const {schema: {type}, onChange} = this.props
+
+    if (type == 'boolean') {
+      value = checked
+    }
+    // console.log('value', value, checked);
     this.props.form[this.props.name] = value
     this.setState({value});
+
+    if (onChange) {
+      onChange(value)
+    }
   }
 
-  handleKeyPress({key}) {
+  handleKeyPress = ({key}) => {
     if (key === 'Enter') {
       if (this.props.onSubmit) {
 //        console.log('submit form');
@@ -50,15 +49,31 @@ export default class FormInput extends Component {
   }
 
   render() {
+    const {schema: {type}} = this.props
+    let inputProps = {
+      type: inputTypes[type],
+    }
+
+    switch (type) {
+      case 'boolean':
+        inputProps['checked'] = this.state.value
+        break;
+      case 'string':
+        inputProps['value'] = cleanValue(this.state.value)
+        break;
+      default:
+        break
+    }
+
+    // console.log('input props', type, inputProps);
     return (
       <input
         autoFocus={this.props.focus}
-        type="text"
         className="form-control"
-        value={cleanValue(this.state.value)}
         onChange={this.handleChange}
         onKeyPress={this.handleKeyPress}
         onBlur={this.props.onBlur}
+        {...inputProps}
       />
     )
   }

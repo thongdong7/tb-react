@@ -1,7 +1,9 @@
 import api from './api'
 import {isSameParams} from './data'
-import Form from './form'
+import {Form} from './form'
 import {selectProps} from './props'
+
+import * as fs from './form'
 
 export function _get(_api, url, {fields=[], params, defaultData=[]}={}) {
   let lastAPIParams = null
@@ -91,7 +93,7 @@ export function _get2(_api, action) {
 export const get2 = _get2.bind(undefined, api)
 
 export function _buildFormSubmit(_api, url, {fields=[], params}={}) {
-  return (props) => async (formData={}) => {
+  return (props, schema) => async (formData={}) => {
 //        console.log('call', props, form);
     let compParams = {}
     for (const field of fields) {
@@ -100,7 +102,11 @@ export function _buildFormSubmit(_api, url, {fields=[], params}={}) {
       }
     }
 
-    const apiParams = {...params, ...compParams, ...formData}
+    // console.log('form datra', formData, schema);
+    const normalizedFormData = fs.normalizedFormData(formData, schema)
+    // console.log('normalize data', normalizedFormData);
+
+    const apiParams = {...params, ...compParams, ...normalizedFormData}
 //        console.log('comp params', apiParams);
 
     const tmp = await _api.load(url, apiParams)
@@ -146,7 +152,9 @@ export function _form(_api, formBuilder) {
         editable=false
       } = config
 
-      const submit = _buildFormSubmit(_api, url)(props)
+      const formSchema = fs.buildSchema(schema)
+
+      const submit = _buildFormSubmit(_api, url)(props, formSchema)
 
       return {
         ...props,

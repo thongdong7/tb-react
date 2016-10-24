@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-
 import ReactDOM from 'react-dom'
+
+import {inputTypes} from './config'
 
 export default class EditableField extends Component {
   constructor(props) {
@@ -19,17 +20,27 @@ export default class EditableField extends Component {
   }
 
   render() {
-    const {form, field} = this.props
+    const {form, field, schema: {type}} = this.props
+    // console.log('field', field, form.getFieldValue(field));
 
     if (this.state.edit) {
-//      console.log('render field', field);
+    //  console.log('render field', field);
       return form.renderFieldInput(field, {
         onBlur: () => {this.toggleEdit(); form.submitField(field)},
         ref: (c) => c && ReactDOM.findDOMNode(c).focus()
       })
+    } else if (type == 'boolean') {
+      return form.renderFieldInput(field, {
+        onChange: () => {
+          // console.log('onChange', field);
+          form.submitField(field)
+        },
+      })
     } else {
       return (
-        <span onClick={this.toggleEdit} className="editable">{form.getFieldValue(field)}</span>
+        <span onClick={this.toggleEdit} className="editable">
+          {form.getFieldValue(field)}
+        </span>
       )
     }
   }

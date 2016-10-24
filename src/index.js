@@ -5,7 +5,7 @@ export * from './button'
 export * from './mapUtils'
 export * from './apiMiddleWare'
 import api from './api'
-import Form, {FormInput, PropTypeForm} from './form'
+export * from './form'
 import {selectProps} from './props'
 import store from './simple-redux'
 
@@ -31,7 +31,6 @@ export {
   api,
   selectProps,
 
-  Form, FormInput, PropTypeForm,
   success,
   store
 }

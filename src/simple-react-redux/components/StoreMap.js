@@ -13,7 +13,12 @@ export function createStoreMap({dispatch, subscribe, getState}, options={}) {
     let ret = options.props ? options.props(state, optionsProps, dispatch) : optionsProps
 
     for (const transformer of transformers) {
-      ret = transformer.transfer(ret)
+      try {
+        ret = transformer.transfer(ret)
+      } catch (e) {
+        console.error('Transfer error', transformer.transfer, ret);
+        throw e
+      }
     }
 
     return ret
