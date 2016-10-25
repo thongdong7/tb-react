@@ -56,12 +56,13 @@ export default class FormInput extends Component {
 
     switch (type) {
       case 'boolean':
-        inputProps['checked'] = this.state.value
+        inputProps['checked'] = this.state.value ? true : false
         break;
       case 'string':
         inputProps['value'] = cleanValue(this.state.value)
         break;
       default:
+        console.error(`FormInput does not support field type ${type} yet`);
         break
     }
 
