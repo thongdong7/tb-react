@@ -26,8 +26,9 @@ export class RemoteButton extends Component {
     // TODO get api from props if any
     let success = true
     let error
+    let data
     try {
-      const data = await api.load(url, params)
+      data = await api.load(url, params)
       // console.log('data');
     } catch (err) {
       success = false
