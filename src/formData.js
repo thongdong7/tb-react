@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react'
-//import {loadData} from './data'
+import {APIException} from './data'
 import {selectProps} from './props'
 //import Form from './form'
 import {Button} from './button'
+import * as notify from './notify'
 
 import api from './api'
 
@@ -20,14 +21,35 @@ export class RemoteButton extends Component {
   submit = async () => {
 //    console.log('submit to', url, params);
     this.setState({loading: true})
-    const {url, params, onComplete} = this.props
+    const {url, params, onComplete, onError} = this.props
 
     // TODO get api from props if any
-    const data = await api.load(url, params)
+    let success = true
+    let error
+    try {
+      const data = await api.load(url, params)
+      // console.log('data');
+    } catch (err) {
+      success = false
+
+      // console.log('call error', err);
+      if (err instanceof APIException) {
+        error = err.data.message
+      } else {
+        error = 'Unknown error: ' + err
+        console.error(err);
+      }
+      notify.error(error)
+    }
 
     this.setState({loading: false})
-    if (onComplete) {
-      onComplete(data, params)
+
+    if (success) {
+      if (onComplete) {
+        onComplete(data, params)
+      }
+    } else if (onError) {
+      onError(error)
     }
   }
 

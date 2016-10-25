@@ -3,6 +3,11 @@ import React, {Component} from 'react'
 import invariant from 'invariant'
 import storeShape from './simple-react-redux/utils/storeShape'
 
+export function APIException(data) {
+  this.name = "APIException"
+  this.data = data
+}
+
 /**
  * Load data from url
  * @param url
@@ -15,7 +20,22 @@ export async function loadData(url, params: Object) {
 //  const response = await fetch(requestUrl, params)
 //   console.log(requestUrl);
   const response = await fetch(requestUrl, params)
-  return response.json()
+  // console.log('response', response);
+  if (response.status == 200) {
+    return response.json()
+  } else {
+    let data
+    if (response.status == 404) {
+      data = await response.json()
+    } else {
+      data = {
+        ok: false,
+        message: `Error ${response.status} (${response.statusText}): ${response.body}`
+      }
+    }
+
+    throw new APIException(data)
+  }
 }
 
 
