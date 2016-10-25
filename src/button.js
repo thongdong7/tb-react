@@ -4,12 +4,19 @@ import { Link } from 'react-router'
 
 import {selectProps} from './props'
 
-export const Button = ({type="default", icon, name, hideName=false, onClick}) => {
+export const Button = ({type="default", icon, name, hideName=false, spin=false, onClick}) => {
   return (
-    <span className={`btn btn-xs btn-${type}`} onClick={onClick} title={name}>
+    <span
+      className={`btn btn-xs btn-${type}`}
+      onClick={onClick}
+      title={name}
+    >
       {
         icon &&
-        <span className={`glyphicon glyphicon-${icon}`} aria-hidden="true"></span>
+        <span
+          className={`glyphicon glyphicon-${icon} ${spin ? 'glyphicon-spin' : ''}`}
+          aria-hidden="true"
+        ></span>
       }
       {icon && " "}
       {!hideName && name}
