@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "NODE_ENV=development ./node_modules/.bin/babel -d lib src/",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "test": "jest"
   },
   "author": "",
@@ -18,6 +19,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-app": "^0.2.1",
     "chokidar": "^1.6.0",
+    "flow-bin": "^0.33.0",
     "jest": "^16.0.1",
     "react-test-renderer": "^15.3.2",
     "webpack": "^1.13.2"
