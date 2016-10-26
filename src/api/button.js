@@ -1,35 +1,47 @@
 import React, {Component, PropTypes} from 'react'
-import {APIException} from './data'
-import {selectProps} from './props'
-//import Form from './form'
-import {Button} from './button'
-import * as notify from './notify'
+import {Button} from '../button'
+import {selectProps} from '../props'
 
-import {api} from './api'
+import invariant from 'invariant'
 
-export class RemoteButton extends Component {
+export class APIActionButton extends Component {
   static propTypes = {
-    url: PropTypes.string.isRequired,
-    params: PropTypes.object,
+    action: PropTypes.array.isRequired,
     onComplete: PropTypes.func,
+  }
+
+  static contextTypes = {
+    store: PropTypes.shape({
+      subscribe: PropTypes.func.isRequired,
+      dispatch: PropTypes.func.isRequired,
+      getState: PropTypes.func.isRequired
+    })
   }
 
   state = {
     loading: false,
   }
 
-  submit = async () => {
-//    console.log('submit to', url, params);
-    this.setState({loading: true})
-    const {url, params, onComplete, onError} = this.props
+  constructor(props, context) {
+    super(props, context)
+    this.store = props.store || context.store
 
-    // TODO get api from props if any
+    invariant(this.store,
+      `Could not find "store" in either the context or ` +
+      `props`
+    )
+  }
+
+  submit = async () => {
+    this.setState({loading: true})
+    const {action, dispatch, onComplete, onError} = this.props
+
     let success = true
     let error
     let data
     try {
-      data = await api.load(url, params)
-      // console.log('data');
+      data = await this.store.dispatch(...action)
+      console.log('APIActionButton response', data);
     } catch (err) {
       success = false
 

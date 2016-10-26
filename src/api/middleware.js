@@ -1,10 +1,10 @@
 import invariant from 'invariant'
 import Promise from 'promise'
 import 'whatwg-fetch'
-import api from './api'
-import {buildUrl} from './data'
+import {api} from './core'
+import {buildUrl} from '../data'
 
-import {StopDispatchException} from './simple-redux/error'
+import {StopDispatchException} from '../simple-redux/error'
 
 export function APIAction(fn) {
   return {

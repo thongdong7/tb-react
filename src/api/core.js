@@ -1,4 +1,4 @@
-import {loadData} from './data'
+import {loadData} from '../data'
 
 class API {
   constructor() {
@@ -22,4 +22,4 @@ class API {
   }
 }
 
-export default new API()
+export const api = new API()
