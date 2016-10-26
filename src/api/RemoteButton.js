@@ -1,11 +1,11 @@
 import React, {Component, PropTypes} from 'react'
-import {APIException} from './data'
-import {selectProps} from './props'
+import {APIException} from '../data'
+import {selectProps} from '../props'
 //import Form from './form'
-import {Button} from './components/button'
-import * as notify from './notify'
+import {Button} from '../components'
+import * as notify from '../notify'
 
-import {api} from './api'
+import {api} from './core'
 
 export class RemoteButton extends Component {
   static propTypes = {
