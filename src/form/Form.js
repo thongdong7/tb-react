@@ -8,7 +8,7 @@ import _ from 'lodash'
 import * as fs from './FormSchema'
 
 export class Form {
-  constructor(data, onSubmit, {schema={}, complete, editable=false}={}) {
+  constructor(data, onSubmit, {schema=[], complete, editable=false}={}) {
     this.data = {...data}
     this.oldData = data
     this.onSubmit = onSubmit
@@ -45,7 +45,12 @@ export class Form {
   }
 
   getFieldTitle = (field) => {
-    return this.schema[field].title ? this.schema[field].title : field
+    const fieldConfig = this.schema[field]
+    if (!fieldConfig) {
+      return field
+    }
+
+    return fieldConfig.title ? fieldConfig.title : field
   }
 
   getFieldValue = (field) => {
@@ -87,7 +92,7 @@ export class Form {
         form={this.data}
         onSubmit={this.onFieldSubmit}
         focus={index === 0}
-        schema={this.schema[field]}
+        schema={this.schema[field] || {field, type: 'string'}}
         {...props}
       />
     )

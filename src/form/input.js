@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {inputTypes} from './config'
 function cleanValue(value) {
   return value ? value : ""
@@ -6,6 +6,12 @@ function cleanValue(value) {
 
 
 export default class FormInput extends Component {
+  static propTypes = {
+    schema: PropTypes.shape({
+      type: PropTypes.string.isRequired
+    })
+  }
+
   constructor(props) {
     super(props)
 
@@ -49,7 +55,9 @@ export default class FormInput extends Component {
   }
 
   render() {
-    const {schema: {type}} = this.props
+    // console.log('props', this.props);
+    const {schema: {type='string'}} = this.props
+    // console.log('type', type);
     let inputProps = {
       type: inputTypes[type],
     }
@@ -58,15 +66,16 @@ export default class FormInput extends Component {
       case 'boolean':
         inputProps['checked'] = this.state.value ? true : false
         break;
+      case undefined:
       case 'string':
         inputProps['value'] = cleanValue(this.state.value)
         break;
       default:
-        console.error(`FormInput does not support field type ${type} yet`);
+        console.error(`FormInput does not support field type '${type}' yet`);
         break
     }
 
-    // console.log('input props', type, inputProps);
+    console.log('input props', type, inputProps);
     return (
       <input
         autoFocus={this.props.focus}
