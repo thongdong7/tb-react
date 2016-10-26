@@ -1,4 +1,4 @@
-import createStore, {middlewareFetch, FetchAction} from '../../src/simple-redux'
+import {createStore, middlewareFetch, FetchAction} from '../../src/simple-redux'
 
 
 test('FetchAction support parameter in url', async () => {

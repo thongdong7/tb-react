@@ -1,4 +1,4 @@
-import createStore, {middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
+import {createStore, middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
 import {createStoreMap} from '../../src/simple-react-redux'
 
 test("Props change when state changed", () => {

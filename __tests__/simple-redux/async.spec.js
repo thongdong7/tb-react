@@ -1,4 +1,4 @@
-import createStore, {middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
+import {createStore, middlewareAsyncAction, AsyncAction} from '../../src/simple-redux'
 
 //console.log('aynsc 1', AsyncAction);
 

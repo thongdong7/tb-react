@@ -1,3 +1,3 @@
 up:
-  - npm run prepublish -- --watch
+  - rm lib -rf && npm run prepublish -- --watch
 #  - npm test -- --watch

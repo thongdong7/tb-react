@@ -1,4 +1,5 @@
-import createStore, {
+import {
+  createStore, 
   ReducerSet,
   IdDict
 } from '../../src/simple-redux'
