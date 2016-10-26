@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {Button} from '../button'
+import {Button} from '../components'
 import {selectProps} from '../props'
 
 import invariant from 'invariant'

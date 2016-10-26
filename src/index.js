@@ -1,7 +1,6 @@
 export * from './data'
 export * from './formData'
 export * from './link'
-export * from './button'
 export * from './mapUtils'
 export * from './form'
 export * from './notify'

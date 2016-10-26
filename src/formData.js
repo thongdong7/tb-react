@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {APIException} from './data'
 import {selectProps} from './props'
 //import Form from './form'
-import {Button} from './button'
+import {Button} from './components/button'
 import * as notify from './notify'
 
 import {api} from './api'

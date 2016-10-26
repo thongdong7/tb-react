@@ -2,7 +2,7 @@
 import React, {Component, PropTypes} from 'react'
 import { Link } from 'react-router'
 
-import {selectProps} from './props'
+import {selectProps} from '../props'
 
 export const Button = ({type="default", icon, name, hideName=false, spin=false, onClick}) => {
   return (
