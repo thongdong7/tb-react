@@ -41,7 +41,7 @@ export class APIActionButton extends Component {
     let data
     try {
       data = await this.store.dispatch(...action)
-      console.log('APIActionButton response', data);
+      // console.log('APIActionButton response', data);
     } catch (err) {
       success = false
 
@@ -59,7 +59,7 @@ export class APIActionButton extends Component {
 
     if (success) {
       if (onComplete) {
-        onComplete(data, params)
+        onComplete(data)
       }
     } else if (onError) {
       onError(error)
