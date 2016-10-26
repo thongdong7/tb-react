@@ -75,7 +75,7 @@ export default class FormInput extends Component {
         break
     }
 
-    console.log('input props', type, inputProps);
+    // console.log('input props', type, inputProps);
     return (
       <input
         autoFocus={this.props.focus}

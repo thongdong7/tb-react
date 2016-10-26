@@ -9,3 +9,7 @@ export * from './props'
 export * from './simple-react-redux'
 export * from './simple-redux'
 
+import {Link} from 'react-router'
+export {
+  Link,
+}

@@ -15,7 +15,7 @@ export function APIException(data) {
  * @returns {*}
  */
 export async function loadData(url: string, params: Object) {
-  console.log('url', url, params);
+  // console.log('url', url, params);
   const requestUrl = buildUrl(url, params)
 //  const response = await fetch(requestUrl, params)
 //   console.log(requestUrl);

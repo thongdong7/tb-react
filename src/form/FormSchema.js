@@ -59,6 +59,10 @@ export function createSchema(schema) {
 }
 
 export function normalizedFormData(data, schema) {
+  if (!schema) {
+    return data
+  }
+  
   let ret = {}
   for (const field of Object.keys(data)) {
     let value = data[field]
