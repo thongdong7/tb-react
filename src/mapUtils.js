@@ -70,4 +70,4 @@ export function _form2(_api, formBuilder) {
   }
 }
 
-export const form2 = _form.bind(undefined, api)
+export const form2 = _form2.bind(undefined, api)

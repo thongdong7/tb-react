@@ -4,4 +4,3 @@ export * from './reducer'
 import IdDict from './iddict'
 
 export {IdDict, createStore}
-export default createStore

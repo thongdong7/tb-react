@@ -102,8 +102,3 @@ class SiteList extends Component {
 //              </li>
 //            )
 //          })}
-
-
-// export default map(
-//   get2(siteActions.load),
-// )(SiteList)
