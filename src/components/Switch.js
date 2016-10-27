@@ -20,7 +20,7 @@ export class Switch extends React.Component {
     }
   }
 
-  onChange(e) {
+  onChange= (e) => {
     if (this.props.onChange) {
       // console.log(e.target.checked);
       this.props.onChange(e.target.checked)
@@ -36,7 +36,7 @@ export class Switch extends React.Component {
           className="cmn-toggle cmn-toggle-round"
           style={{visibility: 'hidden', position: 'absolute', marginLeft: '-9999px'}}
           type="checkbox"
-          onChange={this.onChange.bind(this)}
+          onChange={this.onChange}
           defaultChecked={this.state.checked}
         />
         <label htmlFor={"cmn-toggle-"+this.state.id}></label>

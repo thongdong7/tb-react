@@ -12,7 +12,8 @@ export class InputTextForm extends Component {
   }
 
   static propTypes = {
-    action: PropTypes.array.isRequired,
+    action: PropTypes.array,
+    actionFunc: PropTypes.func,
     onComplete: PropTypes.func
   }
 
@@ -38,10 +39,11 @@ export class InputTextForm extends Component {
   }
 
   render() {
-    const {action=[]} = this.props
+    const {action, actionFunc} = this.props
     const {value, error} = this.state
 
     const errorClass = error ? 'has-error': ''
+    const buttonAction = action ? [...action, value] : actionFunc(value)
     return (
       <form
         role="form"
@@ -59,7 +61,7 @@ export class InputTextForm extends Component {
           <span className="input-group-btn">
             <APIActionButton
               ref={(r) => this.button = r}
-              action={[...action, value]}
+              action={buttonAction}
               name="Add"
               onError={this.onError}
               onComplete={this.onComplete}
