@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from 'react'
 
 import Modal from 'react-modal'
 
+import {Button} from './Button'
 import {selectProps} from '../../props'
 
 const customStyles = {
