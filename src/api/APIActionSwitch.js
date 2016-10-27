@@ -3,6 +3,7 @@ import {Switch} from '../components'
 import {selectProps} from '../props'
 import {APIException} from '../data'
 import * as notify from '../notify'
+import {defaultDispatchAction} from './defaultDispatchAction'
 
 import invariant from 'invariant'
 
@@ -59,36 +60,40 @@ export class APIActionSwitch extends Component {
 
   submit = async (value) => {
     this.setState({loading: true})
-    const {action, dispatch, onComplete, onError} = this.props
 
-    let success = true
-    let error
-    let data
-    try {
-      data = await this.store.dispatch(...action, value)
-      // console.log('APIActionButton response', data);
-    } catch (err) {
-      success = false
-
-      // console.log('call error', err);
-      if (err instanceof APIException) {
-        error = err.data.message
-      } else {
-        error = 'Unknown error: ' + err
-        console.error(err);
-      }
-      notify.error(error)
-    }
-
-    this.setState({loading: false})
-
-    if (success) {
-      if (onComplete) {
-        onComplete(data)
-      }
-    } else if (onError) {
-      onError(error)
-    }
+    defaultDispatchAction(this.store.dispatch, value, this.props, {
+      afterDispatch: () => this.setState({loading: false})
+    })
+    // const {action, onComplete, onError} = this.props
+    //
+    // let success = true
+    // let error
+    // let data
+    // try {
+    //   data = await this.store.dispatch(...action, value)
+    //   // console.log('APIActionButton response', data);
+    // } catch (err) {
+    //   success = false
+    //
+    //   // console.log('call error', err);
+    //   if (err instanceof APIException) {
+    //     error = err.data.message
+    //   } else {
+    //     error = 'Unknown error: ' + err
+    //     console.error(err);
+    //   }
+    //   notify.error(error)
+    // }
+    //
+    // this.setState({loading: false})
+    //
+    // if (success) {
+    //   if (onComplete) {
+    //     onComplete(data)
+    //   }
+    // } else if (onError) {
+    //   onError(error)
+    // }
   }
 
   render() {
