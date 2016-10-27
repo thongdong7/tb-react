@@ -35,7 +35,6 @@ export class Switch extends React.Component {
         <input
           id={"cmn-toggle-"+this.state.id}
           className="cmn-toggle cmn-toggle-round"
-          style={{visibility: 'hidden', position: 'absolute', marginLeft: '-9999px'}}
           type="checkbox"
           onChange={this.onChange}
           checked={this.state.checked}

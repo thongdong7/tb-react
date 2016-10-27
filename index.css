@@ -24,7 +24,7 @@
     }
 }
 
-// Switch
+/* Switch */
 .cmn-toggle {
   position: absolute;
   margin-left: -9999px;
@@ -100,4 +100,15 @@ input.cmn-toggle-round:checked + label:before {
 
 input.cmn-toggle-round:checked + label:after {
   margin-left: 30px;
+}
+
+/* InputInplace */
+.editable-value {
+  background-color: #ddd;
+  cursor: text;
+  padding: 5px;
+}
+
+.editable-value:hover {
+  background-color: #999;
 }
