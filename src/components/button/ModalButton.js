@@ -1,54 +1,9 @@
 // @flow
 import React, {Component, PropTypes} from 'react'
-import { Link } from 'react-router'
-
-import {selectProps} from '../props'
-
-export const Button = ({type="default", icon, name, hideName=false, spin=false, onClick}) => {
-  return (
-    <span
-      className={`btn btn-xs btn-${type}`}
-      onClick={onClick}
-      title={name}
-    >
-      {
-        icon &&
-        <span
-          className={`glyphicon glyphicon-${icon} ${spin ? 'glyphicon-spin' : ''}`}
-          aria-hidden="true"
-        ></span>
-      }
-      {icon && " "}
-      {!hideName && name}
-    </span>
-  )
-}
-
-Button.propTypes = {
-  icon: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  onClick: PropTypes.func
-}
-
-export const LinkButton = ({type="info", icon="link", to, name}) => {
-  return (
-    <Link to={to} className={`btn btn-xs btn-${type}`}>
-      {
-        icon &&
-        <span className={`glyphicon glyphicon-${icon}`} aria-hidden="true"></span>
-      }
-      {icon && " "}
-      {name}
-    </Link>
-  )
-}
-
-LinkButton.propTypes = {
-  name: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
-}
 
 import Modal from 'react-modal'
+
+import {selectProps} from '../../props'
 
 const customStyles = {
   overlay: {
@@ -95,28 +50,20 @@ export class ModalButton extends Component {
     onClose: PropTypes.func
   }
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      modalIsOpen: false
-    }
-
-    this.openModal = this.openModal.bind(this)
-    this.closeModal = this.closeModal.bind(this)
-    this.afterOpenModal = this.afterOpenModal.bind(this)
+  state = {
+    modalIsOpen: false
   }
 
-  openModal() {
+  openModal = () => {
     this.setState({modalIsOpen: true});
   }
 
-  afterOpenModal() {
+  afterOpenModal = () => {
     // references are now sync'd and can be accessed.
     // this.refs.subtitle.style.color = '#f00';
   }
 
-  closeModal() {
+  closeModal = () => {
     if (this.props.onClose) {
       this.props.onClose()
     }
