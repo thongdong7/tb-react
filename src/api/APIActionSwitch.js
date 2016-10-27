@@ -92,16 +92,6 @@ export class APIActionSwitch extends Component {
   }
 
   render() {
-    const {icon} = this.props
-    const buttonIcon = this.state.loading ? 'refresh': icon
-    const props = {}
-    if (this.state.loading) {
-      props.spin = true
-      props.icon = 'refresh'
-    } else {
-      props.icon = icon
-    }
-
     return (
       <Switch
         {...selectProps(this.props, ['checked'])}

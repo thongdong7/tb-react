@@ -20,15 +20,16 @@ export class Switch extends React.Component {
     }
   }
 
-  onChange= (e) => {
+  onChange= ({target: {checked}}) => {
     if (this.props.onChange) {
       // console.log(e.target.checked);
-      this.props.onChange(e.target.checked)
-      this.setState({checked: e.target.checked})
+      this.props.onChange(checked)
     }
+    this.setState({checked})
   }
 
   render() {
+    // console.log('switch', this.state.checked);
     return (
       <span>
         <input
@@ -37,7 +38,7 @@ export class Switch extends React.Component {
           style={{visibility: 'hidden', position: 'absolute', marginLeft: '-9999px'}}
           type="checkbox"
           onChange={this.onChange}
-          defaultChecked={this.state.checked}
+          checked={this.state.checked}
         />
         <label htmlFor={"cmn-toggle-"+this.state.id}></label>
       </span>
