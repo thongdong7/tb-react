@@ -102,7 +102,9 @@ export function _form(_api, formBuilder) {
         // Form options
         complete,
         schema,
-        editable=false
+        editable=false,
+        renderer,
+        rendererOptions,
       } = config
 
       const formSchema = fs.buildSchema(schema)
@@ -117,7 +119,9 @@ export function _form(_api, formBuilder) {
           {
             schema,
             complete,
-            editable
+            editable,
+            renderer,
+            rendererOptions,
           }
         )
       }

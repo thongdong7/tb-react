@@ -3,10 +3,13 @@ import React, {Component, PropTypes} from 'react'
 import { Link } from 'react-router'
 
 
-export const Button = ({type="default", icon, name, hideName=false, spin=false, onClick}) => {
+export const Button = ({type="default", inputClass, icon, name, hideName=false, spin=false, onClick}) => {
+  if (!inputClass) {
+    inputClass = `btn btn-xs btn-${type}`
+  }
   return (
     <span
-      className={`btn btn-xs btn-${type}`}
+      className={inputClass}
       onClick={onClick}
       title={name}
     >

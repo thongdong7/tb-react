@@ -7,15 +7,114 @@ import _ from 'lodash'
 
 import * as fs from './FormSchema'
 
+class FormRendererBase {
+  constructor(form, options={}) {
+    this.form = form
+    this.options = options
+  }
+}
+
+
+class FormRendererHorizontal extends FormRendererBase {
+  renderForm = (fields, options={}) => {
+    const submitControl = this.form.renderSubmit(options.submit)
+    let submitContent
+    if (this.options.showLabel) {
+      submitContent = (
+        <div className="form-group">
+          <div className="col-sm-offset-4 col-sm-8">
+            {submitControl}
+          </div>
+        </div>
+      )
+    } else {
+      submitContent = submitControl
+    }
+    return (
+      <div className="form-horizontal">
+        {fields.map((field, i) => this.renderFieldRow(field, i))}
+        {submitContent}
+      </div>
+    )
+  }
+
+  renderFieldRow = (field, index) => {
+    const size = this.options.showLabel ? 8 : 12
+    const fieldSchema = this.form.schema.getByField(field)
+    const renderProps = this._getControlStyle(fieldSchema)
+
+    let control;
+    if (fieldSchema.type === 'boolean') {
+      control = this.form.renderField(field, renderProps, index)
+    } else {
+      control = (
+        <div className={`col-sm-${size}`}>
+          {this.form.renderField(field, renderProps, index)}
+        </div>
+      )
+    }
+    return (
+      <div key={field} {...this._getRowStyle(fieldSchema)}>
+        {
+          this.options.showLabel &&
+          <label
+            htmlFor={`form_${field}`}
+            className="col-sm-4 control-label"
+          >{this.form.getFieldTitle(field)}</label>
+        }
+        {control}
+      </div>
+    )
+  }
+
+  _getRowStyle = (fieldSchema) => {
+    const defaultRowStyle = {
+      className: fieldSchema.type === 'boolean' ? 'checkbox' : "form-group"
+    }
+
+    if (this.options.getRowStyle) {
+      const rowStyle = this.options.getRowStyle(fieldSchema)
+      if (rowStyle) {
+        return {...defaultRowStyle, ...rowStyle}
+      }
+    }
+
+    return defaultRowStyle
+  }
+
+  _getControlStyle = (fieldSchema) => {
+    const renderProps = {
+      title: fieldSchema.title,
+    }
+    if (!this.options.showLabel && fieldSchema.isStringControl) {
+      renderProps.placeholder = fieldSchema.title
+    }
+
+    if (this.options.getControlStyle) {
+      return {...renderProps, ...this.options.getControlStyle(fieldSchema)}
+    }
+
+    return renderProps
+  }
+}
+
 export class Form {
-  constructor(data, onSubmit, {schema=[], complete, editable=false}={}) {
+  constructor(data, onSubmit, {schema=[], complete, editable=false, renderer, rendererOptions}={}) {
     this.data = {...data}
     this.oldData = data
     this.onSubmit = onSubmit
-    this.schema = fs.buildSchema(schema)
+    this.schema = fs.createSchema(schema)
     // console.log('init data', data);
     this.complete = complete
     this.editable = editable
+    if (!renderer) {
+      renderer = FormRendererHorizontal
+    }
+
+    const {renderForm, renderFieldRow} = new renderer(this, rendererOptions)
+
+    this._renderForm = renderForm
+    this.renderFieldRow = renderFieldRow
   }
 
   submit = async () => {
@@ -45,7 +144,7 @@ export class Form {
   }
 
   getFieldTitle = (field) => {
-    const fieldConfig = this.schema[field]
+    const fieldConfig = this.schema.getByField(field)
     if (!fieldConfig) {
       return field
     }
@@ -57,18 +156,27 @@ export class Form {
     return this.data[field]
   }
 
-  renderForm = (fields) => {
-    return (
-      <div className="form-horizontal">
-        {fields.map((field, i) => this.renderFieldRow(field, i))}
-        <div className="form-group">
-          <div className="col-sm-offset-4 col-sm-8">
-            {this.renderSubmit()}
-          </div>
-        </div>
-      </div>
-    )
+  renderForm = (fields, options) => {
+    if (!fields) {
+      // console.log('fields', fields, this.schema.fields);
+      fields = this.schema.fields
+    }
+
+    return this._renderForm(fields, options)
   }
+
+  // renderForm = (fields) => {
+  //   return (
+  //     <div className="form-horizontal">
+  //       {fields.map((field, i) => this.renderFieldRow(field, i))}
+  //       <div className="form-group">
+  //         <div className="col-sm-offset-4 col-sm-8">
+  //           {this.renderSubmit()}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   renderField = (field, props={}, index) => {
     if (this.editable) {
@@ -76,7 +184,7 @@ export class Form {
         <EditableField
           form={this}
           field={field}
-          schema={this.schema[field]}
+          schema={this.schema.getByField(field)}
         />
       )
     } else {
@@ -85,14 +193,13 @@ export class Form {
   }
 
   renderFieldInput = (field, props={}, index) => {
-    // console.log('render input', field, this.schema[field]);
     return (
       <FormInput
         name={field}
         form={this.data}
         onSubmit={this.onFieldSubmit}
         focus={index === 0}
-        schema={this.schema[field] || {field, type: 'string'}}
+        schema={this.schema.getByField(field) || {field, type: 'string'}}
         {...props}
       />
     )
@@ -109,9 +216,9 @@ export class Form {
     )
   }
 
-  renderSubmit = ({name="Save", type="info", icon="save", hideName}={}) => {
+  renderSubmit = ({name="Save", type="info", icon="save", hideName, inputClass}={}) => {
     return (
-      <Button {...{name, type, icon, hideName}} onClick={() => this.submit()} />
+      <Button {...{name, type, icon, hideName, inputClass}} onClick={() => this.submit()} />
     )
   }
 }

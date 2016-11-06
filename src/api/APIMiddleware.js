@@ -17,7 +17,11 @@ function isFetchAction(data) {
   return data && data._action === true && typeof data._api === 'function'
 }
 
-class MiddlewareAPI {
+export class MiddlewareAPI {
+  constructor(options={}){
+    this.options = options
+  }
+
   couldHandle(action) {
     return action && action._api !== undefined
   }
@@ -37,7 +41,7 @@ class MiddlewareAPI {
 
       const p = new Promise(
         (resolve, reject) => {
-          fetch(requestUrl).then(
+          fetch(requestUrl, {credentials: 'include'}).then(
             response => {
               const ok = response.status == 200
 
@@ -49,6 +53,11 @@ class MiddlewareAPI {
                 }
 
                 if (!ok && error) {
+                  if (this.options.error) {
+                    // Handle
+                    this.options.error(dispatch, data, response.status)
+                  }
+
                   error(dispatch, data)
                 }
 

@@ -1,8 +1,9 @@
 export function buildSchema(schema) {
   if (_.isArray(schema)) {
     let ret = {}
-    for (const i of schema) {
-      ret[i.field] = i
+    for (const item of schema) {
+      ret[item.field] = item
+      ret[item.field].isStringControl = item.type === 'string' || item.type === 'password'
     }
 
     return ret
@@ -62,7 +63,7 @@ export function normalizedFormData(data, schema) {
   if (!schema) {
     return data
   }
-  
+
   let ret = {}
   for (const field of Object.keys(data)) {
     let value = data[field]

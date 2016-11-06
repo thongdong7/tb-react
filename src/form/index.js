@@ -7,3 +7,5 @@ import FormInput from './input'
 export * from './Form'
 export * from './FormSchema'
 export * from './SchemaFilter'
+
+export {FormInput}

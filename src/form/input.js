@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {inputTypes} from './config'
+
 function cleanValue(value) {
   return value ? value : ""
 }
@@ -9,7 +10,8 @@ export default class FormInput extends Component {
   static propTypes = {
     schema: PropTypes.shape({
       type: PropTypes.string.isRequired
-    })
+    }),
+    form: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -56,10 +58,11 @@ export default class FormInput extends Component {
 
   render() {
     // console.log('props', this.props);
-    const {schema: {type='string'}} = this.props
+    const {schema: {type='string'}, placeholder, inputClass, title} = this.props
     // console.log('type', type);
     let inputProps = {
       type: inputTypes[type],
+      className: '',
     }
 
     switch (type) {
@@ -68,23 +71,36 @@ export default class FormInput extends Component {
         break;
       case undefined:
       case 'string':
+      case 'password':
         inputProps['value'] = cleanValue(this.state.value)
+        inputProps['className'] = "form-control"
         break;
       default:
         console.error(`FormInput does not support field type '${type}' yet`);
         break
     }
 
-    // console.log('input props', type, inputProps);
-    return (
+    if (inputClass) {
+      inputProps['className'] = inputClass
+    }
+
+    let control = (
       <input
         autoFocus={this.props.focus}
-        className="form-control"
         onChange={this.handleChange}
         onKeyPress={this.handleKeyPress}
         onBlur={this.props.onBlur}
+        placeholder={placeholder}
         {...inputProps}
       />
     )
+
+    if (type === 'boolean' && title) {
+      return (
+        <label>{control}{title}</label>
+      )
+    }
+
+    return control
   }
 }

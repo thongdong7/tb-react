@@ -8,6 +8,7 @@ import {isSameParams} from '../../data'
 const emptyProps = (state) => ({})
 
 export const connect2 = (options={}, ...transformers) => (Comp) => {
+  // invariant(Comp, "Expect connect(...)(Comp). Receive connect(...) ")
   class Connect extends Component {
     constructor(props, context) {
       super(props, context)
@@ -70,3 +71,5 @@ export const connect2 = (options={}, ...transformers) => (Comp) => {
 
   return Connect
 }
+
+export const connect = connect2
