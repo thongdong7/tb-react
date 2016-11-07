@@ -17,7 +17,7 @@ export default class FormInput extends Component {
   constructor(props) {
     super(props)
 
-    const value = cleanValue(props.form[props.name])
+    const value = cleanValue(props.form[props.name] || props.schema.value)
     this.state = {
       value
     }

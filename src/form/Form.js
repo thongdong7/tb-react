@@ -102,8 +102,16 @@ export class Form {
   constructor(data, onSubmit, {schema=[], complete, editable=false, renderer, rendererOptions}={}) {
     this.data = {...data}
     this.oldData = data
+
     this.onSubmit = onSubmit
     this.schema = fs.createSchema(schema)
+
+    // Use default value if not provided
+    for (const field of this.schema.fields) {
+      if (!this.data[field]) {
+        this.data[field] = this.schema.getByField(field).value
+      }
+    }
     // console.log('init data', data);
     this.complete = complete
     this.editable = editable
