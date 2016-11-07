@@ -19,8 +19,8 @@ export async function loadData(url: string, params: Object) {
   const requestUrl = buildUrl(url, params)
 //  const response = await fetch(requestUrl, params)
 //   console.log(requestUrl);
-  const response = await fetch(requestUrl, params)
-  // console.log('response', response);
+  const response = await fetch(requestUrl, {credentials: 'include'})
+//  console.log('response', response);
   if (response.status == 200) {
     return response.json()
   } else {
