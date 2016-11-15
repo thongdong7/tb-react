@@ -20,6 +20,7 @@ function isFetchAction(data) {
 export class MiddlewareAPI {
   constructor(options={}){
     this.options = options
+    this.fetchOptions = options.session ? {credentials: 'include'} : {}
   }
 
   couldHandle(action) {
@@ -41,7 +42,7 @@ export class MiddlewareAPI {
 
       const p = new Promise(
         (resolve, reject) => {
-          fetch(requestUrl, {credentials: 'include'}).then(
+          fetch(requestUrl, this.fetchOptions).then(
             response => {
               const ok = response.status == 200
 
