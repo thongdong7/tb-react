@@ -20,6 +20,10 @@ export function createSchema(schema) {
     titles: schema.map(i => i.title),
     getByField: (field) => {
       // console.log(field, schema)
+      // if (!schemaMap[field]) {
+      //   console.error(`There is no schema for field '${field}'. SchemaMap:`, schemaMap);
+      // }
+
       return schemaMap[field]
     },
     getDefaultValue: (field) => {
