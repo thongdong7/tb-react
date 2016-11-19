@@ -1,6 +1,22 @@
 # tb-react
 > React library for building internal portal
 
+## connect()
+
+```
+import * as tb from 'tb-react'
+
+tb.connect(map, transformers)(MyComponent)
+```
+
+`map` is something like `redux` (`mapStateToProps(state, ownProps)` and `mapDispatchToProps(dispatch)`)
+
+```javascript
+{
+  props: (state, ownProps, dispatch) => componentProps
+}
+```
+
 ## Form
 
 ```javascript
