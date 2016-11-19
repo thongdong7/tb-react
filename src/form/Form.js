@@ -99,7 +99,7 @@ class FormRendererHorizontal extends FormRendererBase {
 }
 
 export class Form {
-  constructor(data, onSubmit, {schema=[], complete, editable=false, renderer, rendererOptions}={}) {
+  constructor(data, onSubmit, {schema=[], complete, error, editable=false, renderer, rendererOptions}={}) {
     this.data = {...data}
     this.oldData = data
 
@@ -114,6 +114,7 @@ export class Form {
     }
     // console.log('init data', data);
     this.complete = complete
+    this.error = error
     this.editable = editable
     if (!renderer) {
       renderer = FormRendererHorizontal
@@ -129,7 +130,17 @@ export class Form {
 //    console.log('form submit', this.data, this.onSubmit);
     if (this.onSubmit) {
       // console.log('submit', this.data);
-      const ret = await this.onSubmit(this.data)
+      let ret
+      try {
+        ret = await this.onSubmit(this.data)
+      } catch (err) {
+        // Submit error
+        if (this.error) {
+          this.error(err, this.data)
+        }
+
+        return
+      }
 
       // Change oldData so we know when thing is changed
       this.oldData = {...this.data}

@@ -101,6 +101,7 @@ export function _form(_api, formBuilder) {
 
         // Form options
         complete,
+        error,
         schema,
         editable=false,
         renderer,
@@ -119,6 +120,7 @@ export function _form(_api, formBuilder) {
           {
             schema,
             complete,
+            error,
             editable,
             renderer,
             rendererOptions,
