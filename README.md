@@ -20,6 +20,8 @@ tb.connect(map, transformers)(MyComponent)
 ## Form
 
 ```javascript
+import * as tb from 'tb-react'
+
 @tb.connect(
   {
     props: (state, ownProps, dispatch) => ({
@@ -30,6 +32,7 @@ tb.connect(map, transformers)(MyComponent)
   tb.form(props => ({
     url: 'api/url',
     schema: myFormSchema,
+    // To change the style of the rendered form
     rendererOptions: {
       getRowStyle(fieldSchema) {
         return  "class-name-for-row"
@@ -40,10 +43,16 @@ tb.connect(map, transformers)(MyComponent)
         }
       }
     },
+    // When form submitted
     complete: (data) => {
       // console.log('response', data);
       // tb.success(`Form is submitted`)
     },
+    // When form submit error
+    error: (err, data) => {
+      //
+      tb.error(err.data.message)
+    }
   })),
 )
 class MyComponent extends Component {
