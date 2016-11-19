@@ -14,12 +14,12 @@ export function APIException(data) {
  * @param params
  * @returns {*}
  */
-export async function loadData(url: string, params: Object) {
+export async function loadData(url: string, params: Object, options={}) {
   // console.log('url', url, params);
   const requestUrl = buildUrl(url, params)
 //  const response = await fetch(requestUrl, params)
 //   console.log(requestUrl);
-  const response = await fetch(requestUrl, {credentials: 'include'})
+  const response = await fetch(requestUrl, options)
 //  console.log('response', response);
   if (response.status == 200) {
     return response.json()
