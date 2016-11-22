@@ -24,6 +24,10 @@ import * as tb from 'tb-react'
 
 @tb.connect(
   {
+    // Do something when componentWillMount, e.g. call API to load data
+    start: (props, dispatch) => {},
+
+    // Transform state, ownProps and dispatch to new props
     props: (state, ownProps, dispatch) => ({
       ...state,
       newProp: 123,
@@ -66,7 +70,7 @@ class MyComponent extends Component {
             submit: {
               name: 'Submit',
               icon: '',
-              inputClass: 'btn btn-success btn-block btn-lg'
+              inputClass: 'default-class-name-for-input-field'
             }
           })
         }
