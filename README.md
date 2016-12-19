@@ -80,3 +80,88 @@ class MyComponent extends Component {
   }
 }
 ```
+
+## actions
+
+```javascript
+import {
+  APIAction,
+  ReducerSet,
+  createSchema,
+} from 'tb-react'
+
+export const accountFieldSchema = [
+  {
+    field: 'username',
+    title: 'Username',
+    type: 'string',
+  },
+  {
+    field: 'password',
+    title: 'Password',
+    type: 'string',
+  },
+  {
+    field: 'UpFrom',
+    title: 'Up từ',
+    type: 'number',
+  },
+  {
+    field: 'UpTo',
+    title: 'Đến',
+    type: 'number',
+  },
+  {
+    field: 'SleepTime',
+    title: 'Thời gian chờ (giây)',
+    type: 'number',
+  },
+  {
+    field: 'IsVIP',
+    title: 'VIP',
+    type: 'boolean',
+  },
+]
+
+export const accountSchema = createSchema(accountFieldSchema)
+
+export const accountFields = accountSchema.fields;
+export const accountFieldTitles = accountSchema.titles;
+
+export const accountActions = {
+  update: (site, data) => state => ({...state, [site]: data}),
+  load: APIAction(site => ({
+    url: 'Account/all_by_site',
+    params: {site, fields: accountFields.join(',')},
+    success: (dispatch, data) => {
+//       console.log('data', data);
+      dispatch(accountActions.update, site, data)
+    },
+    error: (dispatch) => {},
+  })),
+  // Clean all accounts data
+  clean: () => state => ({}),
+}
+
+export const accountFilterActions = {
+  add: (field, value) => state => {
+    const ret = {}
+    if (state.fields.indexOf(field) < 0) {
+      ret.fields = [...state.fields, field]
+    } else {
+      ret.fields = state.fields
+    }
+
+    ret.data = {...state.data, [field]: value}
+    // console.log(ret);
+
+    return ret
+  },
+  change: ReducerSet(),
+}
+
+export default {
+  accounts: [accountActions, {}],
+  accountFilter: [accountFilterActions, {fields: [], data: {}}],
+}
+```
