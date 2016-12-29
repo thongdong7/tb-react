@@ -79,7 +79,7 @@ class API {
     }
   }
 
-  load = (url, params) => {
+  load = (url, params, options={}) => {
     // console.log('url', url, typeof(url));
     let fullUrl = this.host
     if (typeof(url) == 'function') {
@@ -88,8 +88,13 @@ class API {
       fullUrl += buildUrl(url, params)
     }
 
-    return loadData(fullUrl, this.options)
+    const loadOptions = {...this.options, ...options}
+    // console.log('loadOptions', loadOptions);
+
+    return loadData(fullUrl, loadOptions)
   }
+
+
 }
 
 export const api = new API()
